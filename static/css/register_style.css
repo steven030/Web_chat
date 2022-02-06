@@ -1,0 +1,108 @@
+
+
+#login_container{
+    justify-content: center;
+    align-items: center;
+    background-image: url("../source/images/register_form_img.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: right;
+    width: 100% !important;
+    height: 100vh;
+}
+#select_img{
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+#login_container_form{
+
+    justify-content: center;
+    position: absolute;
+    display: flex;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(to top, #7083e4 0%, #5169e0 100%);
+    box-shadow: 1px 4px 4px #0e2236;
+}
+#login_container_form form{
+    width: 100%;
+    margin-left: 6rem;
+    margin-top: 20%;
+    text-align: left;
+
+}
+
+#login_container_form dd label{
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+    margin: 1rem;
+    padding-bottom: 0.5rem;
+    margin-left: 0;
+    font-size: 1.3rem;
+}
+#login_container_form label{
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+    margin: 1rem;
+    padding-bottom: 0.5rem;
+    margin-left: 0;
+    font-size: 1.3rem;
+}
+
+
+#form_login_input{
+    
+    width: 70%;
+    border-radius: 5px;
+    border: none;
+    height: 2.5rem;
+    margin: 1rem;
+    padding-left: 0.5rem;
+    margin-left: 0;
+    text-align: lef;
+
+}
+#send{
+    
+    width: 40%;
+    height: 2.5rem;
+    margin: 1rem;
+    margin-left: 4.5rem;
+    color:#98adc8;
+    background: #fff;
+    border-radius: 10px;
+    
+
+}
+
+#send:hover{
+    background:#f6f6f6;
+    color: #000;
+    box-shadow: 1px 1px 8px 1.5px #3e50ad;
+}
+
+
+#link{
+    text-decoration: none;
+    padding: 1rem;
+    margin: 1rem;
+    margin-left: 0;
+    font-size: 1rem;
+    color: #fff;
+
+}
+#link:hover{
+    color: #bfd9fb;
+
+}
+
+#login_container_form h2{
+    color: #fff;
+    margin-bottom: 0.01rem;
+    text-shadow: 1px 2px #3e50ad ;
+
+}

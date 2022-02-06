@@ -1,0 +1,45 @@
+{%extends 'base/base.html' %}
+
+
+{%block content%}
+<body id="container-all">
+	{%from 'macro.html' import renderform%}
+
+
+
+	<div id="profile-container">
+
+		{%if url_img != None%}
+
+			<img id="user_img" src="{{url_for('static',filename='source/uploads/')}}{{url_img}}" alt="{{username}}">
+			<p id="user_name">{{username}}</p>
+
+			
+
+		{%endif%}
+
+		{%if url_img == None %}
+
+			<img src="{{url_for('static',filename='source/uploads/index.png')}}">
+
+		{%endif%}
+		{%if username%}
+		<div id='nav-menu'>
+			<ul>
+
+				<li><a href="{{ url_for('index') }}"><p>Home</p></a>
+				<li><a href="{{ url_for('chat_user') }}"><p>Chat</p></a>
+				<li><a href="{{ url_for('profile_update') }}"><p>Edit profile</p></a>
+				<li id="logout"><a  href="{{ url_for('loggout') }}">Logout</a></li>
+				<br>
+
+				
+			</ul>
+		</div>
+		{%endif%}
+	</div>
+
+
+
+{%endblock%}
+</body>

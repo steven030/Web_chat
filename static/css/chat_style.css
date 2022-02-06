@@ -1,0 +1,212 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.non-selectable {
+   -moz-user-select: none; 
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none; 
+}
+
+::-webkit-scrollbar {display: none;}
+body{
+	overflow: hidden;
+}
+
+#content-header{
+	border-bottom: 1px solid #e9e9e9;
+}
+
+#logo-title{
+	margin: 0.5rem;
+	padding: 0.5rem;
+	font-size: 2rem;
+}
+#logo-title a{
+	font-style: none;
+	text-decoration: none;
+	color: black;
+
+}
+
+
+#message{
+	
+
+	width: 100vw;
+	height: 90vh;
+
+
+
+}
+#sub-message{
+	background-Color: #dadbdb;
+}
+
+#sub-message{
+	margin: 1.6rem 12.5% 0rem 0rem;
+
+	margin-bottom: 0;
+	padding: 0.5rem;
+	justify-content: center;
+	box-sizing: border-box;
+	float: right;
+	height:81%;
+	width: 75%;
+
+	overflow-y: scroll;
+	overflow-x: hidden;
+	scrollbar-width: none;
+	border: 1px solid black;
+
+}
+#input-container{
+	width: 100%;
+	margin: 0.5rem;
+	float: right;
+	justify-content: center;
+	text-align: center;
+
+
+
+}
+
+#input-container input{
+	float: right;
+	margin: 0.5rem 11.9% 0rem 0rem;
+	padding-left: 10px;
+	font-size: 1rem;
+	border-radius: 15px;
+	box-shadow: 0px 0px 3px #66bad1;
+	border: none;
+	width: 74.5%;
+	height: 3rem;
+	float: right;
+
+}
+#input-container input:focus{
+	box-shadow: 0px 0px 3px #993487;
+	border-color: #993487;
+	outline: 0 none;
+	border: none;
+}
+
+
+li{
+	font-style: none;
+	list-style: none;
+}
+
+/*this is the style of nav*/
+#content-header{
+	display: flex;
+	align-items: center;
+}
+#content-header ul{
+	margin-left: auto;
+	float: right;
+}
+#content-header h2, li{
+	margin: 0.5rem;
+	padding-right: 0.5rem;
+	float: left;
+}
+#content-header li a{
+	color: black;
+	text-decoration: none;
+	transition-duration: .5s;
+	font-size: 1.1rem;
+}
+#content-header li a:hover{
+
+	color: #0398;
+	font-size: 1rem;
+
+}
+/*end style of nav*/
+#content-notify{
+	align-items: center;
+	justify-content: center;
+	height: 3.7rem;
+	width: 100%;
+	box-sizing: border-box;
+	/*text-align: justify;*/
+
+	margin: 1rem;
+
+}
+#notify{
+	width: 16rem;
+	height:2rem;
+	margin: auto;
+	padding: 1rem;
+
+	
+
+	text-align: center;
+	background-color: #dee9ec;
+	font-size: 0.8rem;
+	color: #464646;
+}
+.chat-main{
+	margin: 0.8rem;
+	padding: 3.5rem;
+	justify-content: center;
+	display: block;
+}
+.chat-main img{
+	margin-right: 0.5rem;
+	padding-left: 0.5rem;
+	position: relative;
+
+	width: 3rem;
+	height: 3rem;
+	border-radius: 100%;
+	float: left;
+	
+}
+
+.chat-box{
+
+	float: left;
+	background-color: #f1f2f2;
+
+	max-width: 20rem;
+	display: flex;
+	word-break: break-all;
+	padding: 1rem;
+
+	/*justify-content: center;*/
+	text-align: justify;
+	/*margin-right: 48%;*/
+	margin-bottom: 2rem;
+	border-radius: 0.5rem;
+}
+
+#content{
+	margin: 0.02rem;
+}
+.chat-box p{
+	margin: 0.05rem;
+	padding: 0.05rem;
+	float: left;
+
+}
+#user{
+	margin: 0;
+	padding: 0.05rem;
+}
+
+/*.chat-box-Joselito{
+	background-color: green;
+}*/
+
+footer{
+	margin: 0.05rem;
+	width: 100vw;
+	height: 3rem;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+}

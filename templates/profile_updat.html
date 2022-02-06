@@ -1,0 +1,21 @@
+{%extends 'base/base.html'%}
+
+
+{%block title%} {{title}} {%endblock%}
+
+{%block content%}
+
+
+	{%from "macro.html" import renderform%}
+	<form action ="/profile_update" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+	
+		<p>Actualiza tu imagen</p>
+		<input type="file" name="image" value="" placeholder="">
+		<br>
+		{{renderform(form.username, class="form_style")}}
+
+		<br>
+		<button type="submit">SEND</button>
+	</form>
+
+{%endblock%}

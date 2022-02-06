@@ -1,0 +1,117 @@
+<!doctype html>
+
+<html>
+
+
+
+<head>
+
+	<title>Hi!</title>
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/chat_style.css' ) }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css' ) }}">	
+</head>
+<body>
+	<header >
+		<div id="content-header">
+			<h2 id="logo-title">
+				Hi!
+			</h2>
+		
+		{%if username == None%}
+			<ul id="nav-container">
+				<li>
+					<a href="{{ url_for('login') }}">Login</a>
+				</li>
+				<li>
+					<a href="{{ url_for('register') }}">Register</a>
+				</li>
+
+			</ul>
+		{%endif%}
+
+		{%if username != None%}
+		  	<ul id="nav-container">
+		  		
+			<!-- aqui nos redirige al profile o nos deslogea-->
+			<li class="nav-container-li"><a href="{{ url_for('profile') }}">Profile</a></li>
+			<li class="nav-container-li"><a href="{{ url_for('loggout') }}">Logout</a></li>
+			</ul>
+
+		{%endif%}
+
+		
+		</div>
+	</header>
+	<div id="WebContainer">
+		<div id="cloud-img">
+
+			<span id="cont-img">
+			<img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}"></span>
+			<span id="cont-img1"><img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}"></span>
+			<span id="cont-img2"><img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}"></span>
+			<span id="cont-img3"><img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}"></span>
+		</div>
+		<div id="Webcontainer-main">
+			<h3>What is Hi! ?</h3>
+			<p>Hi there! is a platform for connected users all over the world, it allows you to talk with other without leaving home and have the opportunity to make friends . what're you waiting for joining us? <br><br> <!-- <a href="register">register</a> or <a href="login">login</a> --></p>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+  			<path fill="#7083e4" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,96C640,139,800,213,960,229.3C1120,245,1280,203,1360,181.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+			</svg>
+		</div>
+
+		<div id="About-section">
+			<section>
+				<article>
+					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</article>
+
+				<article>
+					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</article>
+				<article> 
+					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</article>
+				
+			</section>
+			
+		</div>
+
+	</div>
+
+
+{%block content%}
+	
+
+
+
+
+
+
+
+	
+
+
+
+{%endblock%}
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+{%extends 'base/base.html'%}
+
+<body onload="scrollDiv();">
+
+{%block content%}
+
+
+	<div id='message' >
+		<div id="sub-message" onload="scrollDiv();">
+			<ul id='messages'>
+				{%if history%}
+					{%for histori in history.items%}
+					
+					<div class="chat-main" class="non-selectable">
+						<img class="user_images" src="static/source/uploads/{{histori.image}}">
+						<p id="user">{{histori.username}}</p><li class ="chat-box"><p id="content"> {{histori.text}}</p></li>
+					</div>
+					
+					{%endfor%}
+				{%endif%}
+			</ul>
+		</div>
+
+
+		</scroll-container>
+		{%from 'macro.html' import renderform%}
+		<div id="input-container">
+			<form  accept-charset="uft-8" >
+
+				{{renderform(form.comment, id="my_message")}}
+			<!-- 	<button type="button" id="send">Send</button> -->
+
+
+			</form>
+		</div>
+	</div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="{{url_for('static',filename='js/chat_messages.js')}}">
+
+	</script>
+
+
+{%endblock%}
+</body>

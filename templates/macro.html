@@ -1,0 +1,21 @@
+{%macro renderform(field)%}
+
+	<td>{{ field.label }}
+	<dd>{{ field(**kwargs)|safe }}
+	<br>
+	{%if field.errors %}
+		<ul id="_Errors">
+		{%for error in field.errors%}
+			<li id="_Error">
+				{{error}}
+			</li>
+		{%endfor%}
+		</ul>
+		<br>
+		<br>
+
+
+	{%endif%}
+
+
+{%endmacro%}
