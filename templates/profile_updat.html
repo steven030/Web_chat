@@ -5,17 +5,25 @@
 
 {%block content%}
 
-
+	<link rel="stylesheet" href="{{url_for('static',filename='css/update_style.css')}}">
 	{%from "macro.html" import renderform%}
-	<form action ="/profile_update" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-	
-		<p>Actualiza tu imagen</p>
-		<input type="file" name="image" value="" placeholder="">
-		<br>
-		{{renderform(form.username, class="form_style")}}
 
-		<br>
-		<button type="submit">SEND</button>
-	</form>
+	<div id="login_container">
+		
+		<div id="login_container_form">
+
+			<form action ="/profile_update" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+			
+				<h2>UPDATE ACCOUNT</h2>
+			
+				{{renderform(form.username,id="form_login_input", class="form_style")}}
+				<input type="file" name="image" value="" id="select_img"  placeholder="">
+				<br>
+			
+				<button id="send" type="submit">CONFIRM</button>
+			</form>
+		</div>
+	</div>
+	
 
 {%endblock%}
