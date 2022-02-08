@@ -55,6 +55,11 @@
 		<div id="Webcontainer-main">
 			<h3>What is Hi! ?</h3>
 			<p>Hi there! is a platform for connected users all over the world, it allows you to talk with other without leaving home and have the opportunity to make friends . what're you waiting for joining us? <br><br> <!-- <a href="register">register</a> or <a href="login">login</a> --></p>
+			<div id="move-img">
+				<div id="move-cont-img">
+					<img src="{{url_for('static',filename='source/images/move.png')}}" alt="move mouse">
+				</div>
+			</div>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
   			<path fill="#7083e4" fill-opacity="1" d="M0,32L80,37.3C160,43,320,53,480,96C640,139,800,213,960,229.3C1120,245,1280,203,1360,181.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
 			</svg>
@@ -62,35 +67,28 @@
 
 		<div id="About-section">
 			<section>
-				<article>
-					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</article>
+				<div id="article-section">
+					<article>
+						<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
+						<p>Hi's objective is to bring together young people in a safe space where 
+							they can talk, discuss and socialize about their topics of interest, 
+							being able to provide the necessary stability so that all young 
+							people receive the same treatment..</p>
+					</article>
 
-				<article>
-					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</article>
-				<article> 
-					<img src="{{url_for('static',filename='source/images/hablar.png')}}" alt="Chat-easy">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				</article>
-				
+					<article>
+						<img src="{{url_for('static',filename='source/images/facil.png')}}" alt="Chat-easy">
+						<p>The platform provides conveniences for easy understanding of it, both 
+						in the forms and in the way of interacting with others, being one of 
+						the best platforms on the market, easy to use and manage by young users.</p>
+					</article>
+					<article> 
+						<img src="{{url_for('static',filename='source/images/people.png')}}" alt="Chat-easy">
+						<p>people choose us, they are extremely satisfied with social relationships 
+						with people of different ethnicities and cultures, providing friendships that
+						can last, being an excellent platform for people to coexist.</p>
+					</article>
+				</div>
 			</section>
 			
 		</div>
@@ -101,17 +99,9 @@
 {%block content%}
 	
 
-
-
-
-
-
-
-	
-
-
-
 {%endblock%}
+
 </body>
+
 
 </html>

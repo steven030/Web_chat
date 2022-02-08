@@ -45,7 +45,7 @@ body{
 #About-section{
 	display: block;
 	width: 100%;
-	padding-left: 8rem;
+	padding-left: 12rem;
 
 
 
@@ -57,9 +57,11 @@ body{
 	width: 20rem;
 	height: 30rem;
 	display: inline-block;
+	
 
 	line-height: 1.4rem;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
+	text-justify: auto;
 	font-family: sans-serif;
 	box-shadow: 0px 0px 6px 0.02px #0398;
 	border-radius: 1rem;
@@ -150,3 +152,31 @@ svg{
 	top: 30rem;
 
 }
+
+#article-section{
+	margin-bottom: 4rem;
+}
+
+#move-img{
+	width: 100%;
+	height: 6rem;
+	padding-left: 6rem;
+	margin-top: 3.5rem;
+	align-items: center;
+
+
+	
+}
+#move-cont-img{
+	margin: 0px auto;
+	width: 8rem;
+	height: 6rem;
+
+}
+#move-img  img{
+
+	width: 4rem;
+	height: 4rem;
+
+}
+
