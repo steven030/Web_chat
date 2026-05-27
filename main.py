@@ -23,7 +23,10 @@ sendm = False
 #app flask
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
-socketio = SocketIO(app)
+socketio = SocketIO(
+    app,
+    async_mode='threading'
+)
 print(os.getenv("DATABASE_URL"))
 db.init_app(app)
 
@@ -103,35 +106,33 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
+    title = 'Hi!'
+    login_form = forms.Login_user(request.form)
 
-	title = 'Hi!'
-	login_form = forms.Login_user(request.form)
+    if request.method == 'POST':
 
-	user = User.query.filter_by(username = login_form.username.data).first()
+        user = User.query.filter_by(
+            username=login_form.username.data
+        ).first()
 
-	if user:
+        if user and user.verify_password(login_form.password.data):
 
-		if request.method == 'POST' and user.verify_password(login_form.password.data):
+            session['username'] = user.username
+            session['user_id'] = user.id
+            session['user_img'] = user.image
 
-			session['username'] = user.username
-			session['user_id'] = user.id
-			session['user_img'] = user.image
+            flash('Login successful')
 
+            return redirect(url_for('index'))
 
-			print(user.image)
-			
+        else:
+            flash('Username or password incorrect')
 
-
-			flash('se ha iniciado correctamente')
-			return redirect(url_for('index'))
-
-		elif request.method == 'POST':
-			flash('Username or password is incorrect')
-
-	elif request.method == 'POST':
-		flash('Username not exist')
-
-	return render_template('login.html', form = login_form, title = title)
+    return render_template(
+        'login.html',
+        form=login_form,
+        title=title
+    )
 
 @app.route('/loggout')
 def loggout():
@@ -338,12 +339,4 @@ def resive_username(username):
 		
 
 if __name__ == '__main__':
-
-
-    port = int(os.environ.get("PORT", 5000))
-
-    socketio.run(
-        app,
-        host='0.0.0.0',
-        port=port
-    )
+    app.run(debug=True)
