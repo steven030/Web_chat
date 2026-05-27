@@ -24,6 +24,7 @@ sendm = False
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 socketio = SocketIO(app)
+print(os.getenv("DATABASE_URL"))
 db.init_app(app)
 
 with app.app_context():
