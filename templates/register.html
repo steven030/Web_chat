@@ -14,12 +14,12 @@
 		
 		<div id="login_container_form">
 			
-			<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+			<form method="POST" accept-charset="utf-8" enctype="multipart/form-data" >
 				<h2>REGISTER</h2>
 				{{renderform(form.username, id="form_login_input", class="form_style")}}
 				{{renderform(form.password, id="form_login_input", class="form_style")}}
 				{{renderform(form.confirm,  id="form_login_input", class="form_style")}}
-				<input type="file" src="{{url_for('static',filename='source/images/insertar_img.png')}}" id="select_img" name="image" value="" placeholder="">
+				<input type="file" src="{{url_for('static',filename='source/images/insertar_img.png')}}" id="select_img" name="imagen" value="" placeholder="">
 
 				{{renderform(form.honey_pot)}}
 				

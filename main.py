@@ -1,5 +1,5 @@
 #library from python3
-from flask import request, render_template, url_for, Flask, session, redirect
+from flask import request, render_template, url_for, Flask, session, redirect, send_from_directory
 from flask_socketio import SocketIO, send, join_room, leave_room
 import socketio
 from flask import flash
@@ -7,6 +7,7 @@ from PIL import Image
 from werkzeug.utils import secure_filename
 import os
 from os import remove
+from werkzeug.utils import secure_filename
 
 
 #file .py inside proyect
@@ -56,12 +57,20 @@ def register():
 		user = User(register_form.username.data,
 			        register_form.password.data)
 		if request.files:
-			images = request.files['image'];
+			images = request.files['imagen'];
 
 			if images:
-				images.filename = register_form.username.data+"_"+images.filename
-				user.image = images.filename
-				images.save(os.path.join(app.config['IMAGES_UPLOADS'], images.filename))
+				filename = secure_filename(
+				register_form.username.data + "_" + images.filename)
+
+				user.image = filename
+
+				images.save(
+					os.path.join(
+						app.config['IMAGES_UPLOADS'],
+						filename
+					)
+				)
 				print("images saved:", images.filename)
 
 			else:
@@ -163,8 +172,17 @@ def chat_user(page = 1, name = ''):
 		#chat history for users
 		longitud = CommentUser.query.count()
 		page = int(longitud/20)
-		commentList= CommentUser.query.join(User).add_columns(User.username, User.image, CommentUser.text).paginate(page,longitud,False)
-		print(longitud,'<<<<< Aqui')
+		commentList = CommentUser.query.join(User).add_columns(
+			User.username,
+			User.image,
+			CommentUser.text
+		).paginate(
+			page=page,
+			per_page=longitud,
+			error_out=False
+		)
+
+		print(longitud, '<<<<< Aqui')
 		# if commentList:
 		# 	longitud = len(commentList.items)
 			
@@ -180,6 +198,13 @@ def chat_user(page = 1, name = ''):
 
 	return render_template('Chat__user.html', title = title, page = page, log = longitud, username = username, history = commentList, img = img ,form = form_chat)
 
+
+@app.route('/uploads/<filename>')
+def uploads(filename):
+    return send_from_directory(
+        app.config['IMAGES_UPLOADS'],
+        filename
+    )
 
 
 @app.route('/profile', methods=['GET','POST'])
@@ -207,46 +232,52 @@ def profile():
 
 @app.route('/profile_update', methods=['POST','GET'])
 def profile_update():
+    title = 'Hi!'
+    update_form = forms.Profile_updte(request.form)
 
-	title = 'Hi!'
-	update_form = forms.Profile_updte(request.form)
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        
+        if request.method == 'POST' and update_form.validate():
+            path = app.config['IMAGES_UPLOADS'] + '/' + session['user_img']
 
-	if 'username' in session:
+            # 1. USAR .get() EN LUGAR DE CORCHETES
+            images = request.files.get('imagen') 
 
-		user = User.query.filter_by(username=session['username']).first()
-		if request.method == 'POST' and update_form.validate():
+            # 2. Verificar que el archivo exista y tenga un nombre real
+            if images and images.filename != '':
+                if os.path.isfile(path):
+                    try:
+                        remove(path)
+                    except Exception as e:
+                        print(f"No se pudo borrar la imagen anterior: {e}")
 
-			path = app.config['IMAGES_UPLOADS'] +'/'+ session['user_img']
+                # Limpiar y asegurar el nombre del archivo
+                filename = secure_filename(update_form.username.data + "_" + images.filename)
+                path = os.path.join(app.config['IMAGES_UPLOADS'], filename)
+                images.save(path)
 
+                # Actualizar variables con el nuevo nombre
+                user.image = filename
+                session['user_img'] = filename
+            else:
+                # Si no subió una imagen nueva, conservar la que ya tenía en la sesión
+                filename = session['user_img']
 
-			if request.files:
-				remove(path)
-				images = request.files['image'];
-				images.filename = update_form.username.data+"_"+images.filename
-				user.image = images.filename
-				images.save(os.path.join(app.config['IMAGES_UPLOADS'], images.filename))
-				print("images saved:", images.filename)
+            # Actualizar la Base de Datos
+            db.session.query(User).filter(User.id == session['user_id']).update({
+                User.username: update_form.username.data,
+                User.image: filename
+            })
+            db.session.commit()
 
+            session['username'] = update_form.username.data
+            return redirect(url_for('profile'))
 
-			db.session.query(User).filter( User.id == session['user_id'] ).update({
-					User.username: update_form.username.data,
-					User.image:images.filename
-				}
-				)
-			db.session.commit()
+    else:
+        return redirect(url_for('index'))
 
-			session['username'] = user.username
-			session['user_img'] = images.filename
-
-
-			return redirect(url_for('profile'))
-
-	else:
-		return redirect(url_for('index'))
-
-
-	return render_template('profile_updat.html',title = title, form = update_form)
-
+    return render_template('profile_updat.html', title=title, form=update_form)
 
 @socketio.on('message')
 def handle_messages(msg):
