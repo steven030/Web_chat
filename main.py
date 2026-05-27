@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 import os
 from os import remove
 from werkzeug.utils import secure_filename
+from imagekitio import ImageKit
 
 
 #file .py inside proyect
