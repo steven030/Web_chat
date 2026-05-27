@@ -67,26 +67,28 @@ def register():
 		user = User(register_form.username.data,
 			        register_form.password.data)
 		if request.files:
-			images = request.files['imagen'];
-
-			if images:
-				filename = secure_filename(
-				register_form.username.data + "_" + images.filename)
-
-				user.image = filename
-
-				images.save(
-					os.path.join(
-						app.config['IMAGES_UPLOADS'],
-						filename
-					)
-				)
-				print("images saved:", images.filename)
-
+		
+			images = request.files.get('imagen')
+			
+			if images and images.filename != '':
+			    
+			    filename = secure_filename(
+			        register_form.username.data + "_" + images.filename
+			    )
+			
+			    user.image = filename
+			
+			    upload_path = os.path.join(
+			        app.config['IMAGES_UPLOADS'],
+			        filename
+			    )
+			
+			    images.save(upload_path)
+			
+			    print("image saved:", filename)
+			
 			else:
-
-				images = 'index.png'
-				user.image = images
+			    user.image = 'index.png'
 
 		
 		
