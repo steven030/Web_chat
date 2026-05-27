@@ -24,6 +24,12 @@ sendm = False
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 socketio = SocketIO(app)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
+
 
 @app.before_request
 def before_request():
@@ -332,10 +338,6 @@ def resive_username(username):
 
 if __name__ == '__main__':
 
-    db.init_app(app)
-
-    with app.app_context():
-        db.create_all()
 
     port = int(os.environ.get("PORT", 5000))
 
