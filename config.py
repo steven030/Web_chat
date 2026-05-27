@@ -6,7 +6,7 @@ load_dotenv()
 class Config(object):
     SECRET_KEY = os.getenv("SECRET_KEY")
 
-class Is_development(Config):
+class Is_delovepment(Config):
 
     PORT = os.getenv("PORT", 5000)
     DEBUG = os.getenv("DEBUG", "False") == "True"
