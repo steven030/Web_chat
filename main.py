@@ -24,6 +24,11 @@ sendm = False
 #app flask
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
+imagekit = ImageKit(
+    public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
+    private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
+    url_endpoint=os.getenv("IMAGEKIT_URL_ENDPOINT")
+)
 socketio = SocketIO(
     app,
     async_mode='threading'
@@ -71,25 +76,21 @@ def register():
 		
 			images = request.files.get('imagen')
 			
-			if images and images.filename != '':
-			    
+			if images:
+			
 			    filename = secure_filename(
 			        register_form.username.data + "_" + images.filename
 			    )
 			
-			    user.image = filename
-			
-			    upload_path = os.path.join(
-			        app.config['IMAGES_UPLOADS'],
-			        filename
+			    upload = imagekit.upload_file(
+			        file=images.read(),
+			        file_name=filename
 			    )
 			
-			    images.save(upload_path)
-			
-			    print("image saved:", filename)
+			    user.image = upload.response_metadata.raw["url"]
 			
 			else:
-			    user.image = 'index.png'
+			    user.image = "https://ik.imagekit.io/wannab1/default.png"
 
 		
 		
@@ -210,12 +211,7 @@ def chat_user(page = 1, name = ''):
 	return render_template('Chat__user.html', title = title, page = page, log = longitud, username = username, history = commentList, img = img ,form = form_chat)
 
 
-@app.route('/uploads/<filename>')
-def uploads(filename):
-    return send_from_directory(
-        app.config['IMAGES_UPLOADS'],
-        filename
-    )
+
 
 
 @app.route('/profile', methods=['GET','POST'])
@@ -266,11 +262,14 @@ def profile_update():
                 # Limpiar y asegurar el nombre del archivo
                 filename = secure_filename(update_form.username.data + "_" + images.filename)
                 path = os.path.join(app.config['IMAGES_UPLOADS'], filename)
-                images.save(path)
-
-                # Actualizar variables con el nuevo nombre
-                user.image = filename
-                session['user_img'] = filename
+				
+                upload = imagekit.upload_file(
+				    file=images.read(),
+				    file_name=filename
+				)
+				
+				user.image = upload.response_metadata.raw["url"]
+				session['user_img'] = user.image
             else:
                 # Si no subió una imagen nueva, conservar la que ya tenía en la sesión
                 filename = session['user_img']
