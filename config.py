@@ -1,15 +1,18 @@
 import os
 from dotenv import load_dotenv
 
-class Config(object):
-	SECRET_KEY = os.urandom(20)
-	IMAGES_UPLOADS = "/Users/macuser/Documents/webchat/Web_chat/static/source/uploads"
+load_dotenv()
+
+class Config:
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-fallback-key")
+
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # IMPORTANTE: en serverless NO uses rutas locales fijas
+    UPLOAD_FOLDER = "/tmp/uploads"
 
 
-class Is_delovepment(Config):
-
-	PORT = 5000
-	DEBUG = True
-	
-	SQLALCHEMY_DATABASE_URI =  'mysql+pymysql://root:Feoleoas11_@localhost/webchat'
-	SQLALCHEMY_TRACK_MODIFICATIONS = False
+class DevelopmentConfig(Config):
+    DEBUG = True
+    PORT = 5000
