@@ -3,24 +3,23 @@
 {% from 'macro.html' import renderform %}
 
 <div id="chat-page-wrapper">
-    <div class="mobile-only-header">
-    <button id="toggle-users" onclick="toggleUsers()">Usuarios</button>
-    </div>
-    <div id="contact-list">
-        <h3>Usuarios</h3>
-        <ul>
-            {% for user in all_users %}
-                <li class="user-item" onclick="selectUser('{{ user.id }}', '{{ user.username }}')">
-                    {{ user.username }}
-                </li>
-            {% endfor %}
-        </ul>
+    <div id="mobile-menu-wrapper">
+        <button id="toggle-users" onclick="toggleUsers()">Usuarios</button>
+        <div id="contact-list">
+            <h3>Usuarios</h3>
+            <ul>
+                {% for user in all_users %}
+                    <li class="user-item" onclick="selectUser('{{ user.id }}', '{{ user.username }}')">
+                        {{ user.username }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
     <div id="message">
         <div id="sub-message">
-            <ul id="messages">
-                </ul>
+            <ul id="messages"></ul>
         </div>
         <div id="input-container">
             <form method="POST">
@@ -29,7 +28,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>window.currentUser = "{{ username }}";</script>
