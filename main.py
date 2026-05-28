@@ -23,11 +23,12 @@ sendm = False
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 
-imagekit = ImageKit(
-    public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
-    private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
-    url_endpoint=os.getenv("IMAGEKIT_URL_ENDPOINT")
-)
+
+imagekit = ImageKit()
+
+imagekit.public_key = os.getenv("IMAGEKIT_PUBLIC_KEY")
+imagekit.private_key = os.getenv("IMAGEKIT_PRIVATE_KEY")
+imagekit.url_endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT")
 
 socketio = SocketIO(
     app,
