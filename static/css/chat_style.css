@@ -17,7 +17,7 @@ html, body {
     overflow: hidden;
 }
 
-/* --- Barra Lateral de Usuarios --- */
+/* --- Barra Lateral (Se adapta) --- */
 #contact-list {
     width: 280px;
     background: #ffffff;
@@ -25,21 +25,7 @@ html, body {
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     overflow-y: auto;
-}
-
-.user-item {
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid #edf2f7;
-}
-
-.user-item:hover, .user-item.active {
-    background: #4e67df;
-    color: white;
+    flex-shrink: 0;
 }
 
 /* --- Área de Mensajes --- */
@@ -62,11 +48,28 @@ html, body {
     flex-direction: column;
 }
 
-#messages {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* --- RESPONSIVIDAD: Ajustes para Celulares --- */
+@media (max-width: 768px) {
+    #chat-page-wrapper {
+        padding: 0; /* Ocupa el ancho total en móvil */
+        gap: 0;
+    }
+
+    #contact-list {
+        display: none; /* Oculta la lista en móvil para ver solo el chat */
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+    }
+
+    #message {
+        border-radius: 0; /* Bordes rectos en móvil */
+    }
+
+    .chat-box {
+        max-width: 85%; /* Las burbujas aprovechan más el espacio en móvil */
+    }
 }
 
 /* --- Estructura del Chat --- */
@@ -75,6 +78,7 @@ html, body {
     align-items: flex-start; 
     gap: 0.75rem; 
     width: 100%; 
+    margin-bottom: 1rem;
 }
 
 .chat-content-body {
@@ -88,7 +92,7 @@ html, body {
 .my-message .chat-content-body { align-items: flex-end; }
 .other-message { justify-content: flex-start; }
 
-/* --- Avatares --- */
+/* --- Avatares (Forzados a 40x40) --- */
 .chat-avatar-wrapper {
     width: 40px !important;
     height: 40px !important;
@@ -107,14 +111,13 @@ html, body {
     display: block !important;
 }
 
-/* --- Burbujas de Texto --- */
+/* --- Burbujas --- */
 .chat-box {
     padding: 0.8rem 1.2rem;
     border-radius: 18px;
     word-wrap: break-word;
     font-size: 0.95rem;
     line-height: 1.4;
-    margin-top: 4px;
 }
 
 .other-message .chat-box { background: #edf2f7; color: #1a202c; border-bottom-left-radius: 4px; }
@@ -124,10 +127,9 @@ html, body {
 
 /* --- Input --- */
 #input-container { 
-    padding: 1.5rem; 
+    padding: 1rem; 
     border-top: 1px solid #edf2f7; 
     flex-shrink: 0; 
-    background: #ffffff;
 }
 
 #my_message { 
@@ -137,5 +139,3 @@ html, body {
     border: 2px solid #e2e8f0; 
     outline: none;
 }
-
-#my_message:focus { border-color: #4e67df; }
