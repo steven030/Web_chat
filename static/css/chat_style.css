@@ -1,28 +1,41 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background-color: #f4f6f9;
-    overflow: hidden; /* Evita scroll doble en la ventana completa */
-}
-
-/* Contenedor maestro del chat */
 #chat-page-wrapper {
     width: 100%;
-    height: calc(100vh - 70px); /* Altura exacta restante debajo del nav */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    height: calc(100vh - 70px);
+    display: flex; /* Mantenemos flex */
     padding: 1rem;
+    gap: 1rem;     /* Espacio entre la lista y el chat */
 }
 
+/* NUEVO: Lista de contactos */
+#contact-list {
+    width: 250px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    list-style: none;
+}
+
+.user-item:hover {
+    background: #e2e8f0;
+}
+
+/* Ajuste del contenedor de mensajes para que ocupe el resto */
 #message {
-    width: 100%;
-    max-width: 900px; /* Evita que el chat se estire horriblemente en pantallas gigantes */
+    flex: 1; /* Esto hace que el chat ocupe todo el espacio sobrante */
+    max-width: none; /* Quitamos el max-width fijo para usar el espacio disponible */
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -30,193 +43,4 @@ body {
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-}
-
-/* ==========================================
-   CONTENEDOR DE MENSAJES (SCROLLABLE)
-   ========================================== */
-#sub-message {
-    flex: 1; /* Toma todo el espacio disponible empujando el input al fondo */
-    background-color: #f8fafc;
-    padding: 1.5rem;
-    overflow-y: auto; /* Scroll vertical limpio nativo */
-    overflow-x: hidden;
-}
-
-/* Ocultar barra de scroll para navegadores basados en Webkit de forma limpia */
-#sub-message::-webkit-scrollbar {
-    width: 6px;
-}
-#sub-message::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
-    border-radius: 10px;
-}
-
-#messages {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-}
-
-/* ESTRUCTURA BASE DE LA FILA DE MENSAJE */
-.chat-main {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    width: 100%;
-}
-
-.chat-avatar-wrapper {
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #e2e8f0;
-    flex-shrink: 0; /* Impide que el avatar se aplaste si el texto es muy largo */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.chat-avatar-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.chat-content-body {
-    display: flex;
-    flex-direction: column;
-    max-width: 70%; /* Límite elegante de ancho para las burbujas en escritorio */
-}
-
-.chat-username {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #475569;
-    margin-bottom: 0.2rem;
-}
-
-.chat-box {
-    padding: 0.75rem 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    word-break: break-word; /* Rompe palabras largas automáticamente */
-}
-
-.chat-box p {
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
-
-/* =======================================================
-   DIFERENCIACIÓN DE BURBUJAS (PROPIOS VS OTROS)
-   ======================================================= */
-
-/* 1. Mensajes de los demás (Izquierda - Blanco/Gris) */
-.other-message {
-    justify-content: flex-start;
-}
-
-.other-message .chat-username {
-    padding-left: 0.2rem;
-}
-
-.other-message .chat-box {
-    background-color: #ffffff;
-    border-radius: 4px 16px 16px 16px; /* Esquina superior izquierda rígida */
-    border: 1px solid #e2e8f0;
-}
-
-.other-message .chat-box p {
-    color: #1e293b;
-}
-
-/* 2. Tus mensajes (Derecha - Verde WhatsApp) */
-.my-message {
-    justify-content: flex-end; /* Empuja el contenedor al extremo derecho */
-}
-
-.my-message .chat-content-body {
-    align-items: flex-end; /* Alinea el nombre de usuario y la burbuja a la derecha */
-}
-
-.my-message .chat-username {
-    padding-right: 0.2rem;
-}
-
-.my-message .chat-box {
-    background-color: #e4ffd4; /* Verde sutil premium */
-    border-radius: 16px 4px 16px 16px; /* Esquina superior derecha rígida */
-    border: 1px solid #ccebb5;
-}
-
-.my-message .chat-box p {
-    color: #111b21;
-    text-align: left; /* El texto interno mantiene lectura natural de izquierda a derecha */
-}
-
-/* Opcional: Estilo para notificaciones de "sistema" (ej: admin joined) */
-#content-notify {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 0.5rem 0;
-}
-
-#notify {
-    background-color: #e2e8f0;
-    color: #475569;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-/* ==========================================
-   CONTENEDOR DEL INPUT DE TEXTO (FIJO INFERIOR)
-   ========================================== */
-#input-container {
-    width: 100%;
-    padding: 1rem;
-    background-color: #ffffff;
-    border-top: 1px solid #e2e8f0;
-}
-
-#input-container form {
-    width: 100%;
-}
-
-#input-container input {
-    width: 100%;
-    height: 3rem;
-    border-radius: 25px;
-    border: 1px solid #cbd5e1;
-    padding: 0 1.2rem;
-    font-size: 1rem;
-    background-color: #f8fafc;
-    transition: all 0.2s ease;
-}
-
-#input-container input:focus {
-    outline: none;
-    border-color: #4e67df;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(78, 103, 223, 0.15);
-}
-
-/* ==========================================
-   RESPONSIVO PARA CELULARES 📱
-   ========================================== */
-@media (max-width: 768px) {
-    #chat-page-wrapper {
-        padding: 0; /* Ocupa toda la pantalla del teléfono sin dejar bordes sueltos */
-        height: calc(100vh - 60px);
-    }
-    
-    #message {
-        border-radius: 0; /* Se adapta perfectamente como app nativa */
-    }
-    
-    .chat-content-body {
-        max-width: 85%; /* Más espacio horizontal para el texto en pantallas angostas */
-    }
 }
