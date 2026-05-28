@@ -23,7 +23,6 @@ sendm = False
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 
-
 imagekit = ImageKit(
     public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
     private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
@@ -55,10 +54,7 @@ def before_request():
 def index():
     title = 'Hi!'
 
-    if 'username' in session:
-        username = session['username']
-    else:
-        username = None
+    username = session['username'] if 'username' in session else None
 
     return render_template('index.html', title=title, username=username)
 
@@ -77,6 +73,7 @@ def register():
             images = request.files.get('imagen')
 
             if images and images.filename != '':
+
                 filename = secure_filename(
                     register_form.username.data + "_" + images.filename
                 )
@@ -87,17 +84,16 @@ def register():
                         file_name=filename
                     )
                     user.image = upload.response_metadata.raw["url"]
+
                 except TypeError as e:
                     if "description" in str(e):
-                        # La imagen SÍ se sube a ImageKit, pero el SDK se rompe al procesar la respuesta.
-                        # Construimos la URL pública usando tu endpoint.
                         endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
                         user.image = f"{endpoint}/{filename}"
                     else:
-                        raise e # Si es otro error diferente, lo mostramos
-                    else:
-                        user.image = "https://ik.imagekit.io/wannab1/default.png"
-                        
+                        raise e
+            else:
+                user.image = "https://ik.imagekit.io/wannab1/default.png"
+
         db.session.add(user)
         db.session.commit()
 
@@ -161,7 +157,7 @@ def chat_user(page=1, name=''):
         session['reply'] = name
 
         longitud = CommentUser.query.count()
-        page = int(max(longitud / 20, 1))
+        page = int(max(longitud / per_page, 1))
 
         commentList = CommentUser.query.join(User).add_columns(
             User.username,
@@ -224,7 +220,7 @@ def profile_update():
 
         images = request.files.get('imagen')
 
-       if images and images.filename != '':
+        if images and images.filename != '':
 
             filename = secure_filename(
                 update_form.username.data + "_" + images.filename
@@ -236,12 +232,14 @@ def profile_update():
                     file_name=filename
                 )
                 user.image = upload.response_metadata.raw["url"]
+
             except TypeError as e:
                 if "description" in str(e):
                     endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
                     user.image = f"{endpoint}/{filename}"
                 else:
                     raise e
+
             session['user_img'] = user.image
 
         db.session.query(User).filter(User.id == session['user_id']).update({
