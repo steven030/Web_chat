@@ -66,21 +66,23 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; h
 
 /* --- CORRECCIÓN DE IMÁGENES (AVATARES) --- */
 /* El contenedor envuelve la imagen y fuerza el tamaño 40x40 */
-.chat-avatar-wrapper { 
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    overflow: hidden; /* Corta el sobrante */
-    flex-shrink: 0; 
-    background-color: #e2e8f0;
+/* --- REGLA DE FUERZA BRUTA PARA EL AVATAR --- */
+.chat-avatar-wrapper {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    display: block !important;
 }
 
-/* La imagen rellena el contenedor usando object-fit para no deformarse */
-.chat-avatar-wrapper img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; /* Mantiene la proporción y recorta el exceso */
-    display: block;
+.chat-avatar-wrapper img {
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover !important;
+    display: block !important;
 }
 
 /* Estilo de los globos de texto */
