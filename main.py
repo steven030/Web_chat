@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import os
 from os import remove
 from imagekitio import ImageKit
-from imagekitio.models.UploadOptions import UploadOptions
+#from imagekitio.models.UploadOptions import UploadOptions
 # file .py inside project
 from config import Is_delovepment
 from model import User, db, CommentUser
