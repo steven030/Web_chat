@@ -33,7 +33,7 @@ with app.app_context():
 # -------------------------
 @app.before_request
 def before_request():
-    # Corregido 'loggout' por 'logout' para coincidir con la ruta exacta
+    # Sincronizado con 'loggout' (con doble 'g') para evitar el error 500 de Jinja/Werkzeug
     protected_endpoints = ['chat_user', 'profile', 'loggout', 'profile_update']
     guest_endpoints = ['login', 'register']
 
@@ -103,113 +103,5 @@ def register():
                     file_name=filename,
                     options={"use_unique_file_name": False}
                 )
-                user.image = upload.url
-            except Exception as e:
-                # Imprime el error real en tu terminal para que puedas debuggear (Ej: API keys inválidas)
-                print(f"Error de ImageKit API: {e}")
-                flash("Error al procesar la imagen en el servidor de almacenamiento.")
-                return redirect(url_for('register'))
-        else:
-            user.image = "https://ik.imagekit.io/wannab1/default.png"
-
-        db.session.add(user)
-        db.session.commit()
-        flash("Usuario registrado con éxito.")
-        return redirect(url_for('login'))
-
-    return render_template('register.html', form=register_form)
-
-
-# -------------------------
-# LOGIN
-# -------------------------
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    login_form = forms.Login_user(request.form)
-
-    if request.method == 'POST':
-        user = User.query.filter_by(username=login_form.username.data).first()
-
-        if user and user.verify_password(login_form.password.data):
-            session['username'] = user.username
-            session['user_id'] = user.id
-            session['user_img'] = user.image
-
-            flash('Login successful')
-            return redirect(url_for('index'))
-
-        flash('Username or password incorrect')
-
-    return render_template('login.html', form=login_form, title='Hi!')
-
-
-# -------------------------
-# LOGOUT
-# -------------------------
-@app.route('/loggout')  # Corregido de '/loggout' a '/logout'
-def loggout():
-    session.clear()
-    return redirect(url_for('index'))
-
-
-# -------------------------
-# CHAT
-# -------------------------
-@app.route('/chat_user', methods=['GET', 'POST'])
-def chat_user():
-    per_page = 20
-    form_chat = forms.Chat_post(request.form)
-
-    # Paginación dinámica (Corregido de page=1 fijo a lectura de Query Params)
-    page = request.args.get('page', 1, type=int)
-    longitud = CommentUser.query.count()
-
-    commentList = CommentUser.query.join(User).add_columns(
-        User.username,
-        User.image,
-        CommentUser.text
-    ).paginate(
-        page=page,
-        per_page=per_page,
-        error_out=False
-    )
-
-    return render_template(
-        'Chat__user.html',
-        username=session.get('username'),
-        img=session.get('user_img'),
-        history=commentList,
-        form=form_chat,
-        log=longitud
-    )
-
-
-# -------------------------
-# PROFILE
-# -------------------------
-@app.route('/profile')
-def profile():
-    return render_template(
-        'profile_user.html',
-        url_img=session.get('user_img'),
-        username=session.get('username')
-    )
-
-
-# -------------------------
-# PROFILE UPDATE
-# -------------------------
-@app.route('/profile_update', methods=['GET', 'POST'])
-def profile_update():
-    user = User.query.filter_by(username=session['username']).first()
-
-    # Pre-poblar los datos actuales del usuario en el formulario si es una petición GET
-    if request.method == 'POST':
-        update_form = forms.Profile_updte(request.form, request.files)
-    else:
-        update_form = forms.Profile_updte(obj=user)
-
-    if request.method == 'POST' and update_form.validate():
-        new_username = update_form.username.data
-
-        # Validar si el nuevo username ya está en uso
+                
+                # Solución definitiva al bug '__dict__': proces
