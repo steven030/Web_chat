@@ -1,92 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #fff;
+    overflow-x: hidden;
+}
 
-#login_container{
-    justify-content: center;
-    align-items: center;
-    background-image: url("../source/images/login_form_img.jpg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: right;
+/* ==========================================
+   CONTENEDOR PRINCIPAL (PANTALLA DIVIDIDA)
+   ========================================== */
+#login_container {
     width: 100%;
     height: 100vh;
-}
-
-
-#login_container_form{
-
-    justify-content: center;
-    position: absolute;
     display: flex;
-    width: 40%;
+    background-image: url("../source/images/login_form_img.jpg");
+    background-repeat: no-repeat;
+    background-size: cover; /* Cambiado a cover para que no queden huecos blancos si la pantalla es muy ancha */
+    background-position: right center;
+}
+
+/* ==========================================
+   PANEL LATERAL DEL FORMULARIO
+   ========================================== */
+#login_container_form {
+    width: 40%; /* Mantiene el 40% de la pantalla */
     height: 100%;
-    background: linear-gradient(to top, #7083e4 0%, #5169e0 100%);
-    box-shadow: 1px 4px 4px #0e2236;
+    background: linear-gradient(135deg, #5169e0 0%, #7083e4 100%);
+    box-shadow: 4px 0 15px rgba(14, 34, 54, 0.3);
+    
+    /* Flexbox para centrar perfectamente el formulario vertical y horizontalmente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    z-index: 2;
 }
-#login_container_form form{
+
+/* ==========================================
+   ESTILOS INTERNOS DEL FORMULARIO
+   ========================================== */
+#login_container_form form {
     width: 100%;
-    margin-left: 6rem;
-    margin-top: 30%;
-    text-align: left;
-
+    max-width: 360px; /* Limita el ancho para que los inputs no se estiren infinitamente */
+    display: flex;
+    flex-direction: column; /* Alinea los elementos uno abajo del otro en fila */
 }
 
-#form_login label{
+#login_container_form h2 {
     color: #fff;
-    font-weight: bold;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
     text-align: left;
-    margin: 1rem;
-    padding-bottom: 0.5rem;
-    margin-left: 0;
-    font-size: 1.3rem;
+    letter-spacing: 0.5px;
 }
 
-#form_login input{
-    
-    width: 70%;
-    border-radius: 5px;
-    border: none;
-    height: 2.5rem;
-    margin: 1rem;
-    padding-left: 0.5rem;
-    margin-left: 0;
-    text-align: lef;
-
-}
-#form_login button{
-    
-    width: 40%;
-    height: 2.5rem;
-    margin: 1rem;
-    margin-left: 3.5rem;
-    background: #fff;
-    border-radius: 10px;
-    
-
+/* Manejo de los bloques que genera tu macro (renderform) */
+#form_login .form_style, 
+#form_login div { 
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
 }
 
-#form_login button:hover{
-    background:#f6f6f6;
-    color: black;
-}
-
-
-#form_login a{
-    text-decoration: none;
-    padding: 1rem;
-    margin: 1rem;
-    margin-left: 0;
+#form_login label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
     font-size: 1rem;
-    color: #fff;
-
-}
-#form_login a:hover{
-    color: #f2ffd6;
-    font-size: 1.08rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
 }
 
-#login_container_form h2{
-    color: #fff;
-    margin-bottom: 0.01rem;
-    text-shadow: 1px 2px #3e50ad ;
+#form_login input {
+    width: 100%; /* Toma el 100% del max-width del formulario */
+    height: 2.8rem;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    padding: 0 1rem;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.15); /* Fondo semi-transparente moderno */
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
 
+/* Marcador de posición (placeholder) en blanco sutil */
+#form_login input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Efecto Focus al hacer click en los inputs */
+#form_login input:focus {
+    outline: none;
+    background-color: #ffffff;
+    color: #333;
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================
+   BOTÓN DE ACCIÓN
+   ========================================== */
+#form_login button {
+    width: 100%; /* Centrado y alineado perfectamente con los inputs */
+    height: 3rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: #ffffff;
+    color: #5169e0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#form_login button:hover {
+    background: #f6f6f6;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px); /* Pequeño efecto de elevación */
+}
+
+#form_login button:active {
+    transform: translateY(1px);
+}
+
+/* ==========================================
+   ENLACE DE REGISTRO
+   ========================================== */
+#form_login a {
+    text-decoration: none;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-align: center; /* Centra el enlace al final del formulario */
+    transition: color 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+#form_login a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* ==========================================
+   RESPONSIVE (MÓVILES Y TABLETS)
+   ========================================== */
+@media (max-width: 900px) {
+    #login_container_form {
+        width: 100%; /* El formulario toma toda la pantalla en móviles */
+        padding: 2rem;
+    }
+    
+    #login_container {
+        background-image: none; /* Quitamos la imagen de fondo de la chica en móviles para enfocar el login */
+        background-color: #5169e0;
+    }
 }
