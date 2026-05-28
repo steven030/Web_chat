@@ -74,3 +74,33 @@ html, body {
     #contact-list { display: none; } /* Ocultar lista en móviles */
     #message { border-radius: 0; }
 }
+
+/* --- CSS Adicional --- */
+#toggle-users {
+    display: none; /* Oculto por defecto en PC */
+    position: fixed;
+    top: 80px; 
+    left: 10px;
+    z-index: 3000; /* Asegura que esté por encima de todo */
+    padding: 0.6rem 1rem;
+    background: #4e67df;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    #toggle-users { display: block; } /* Visible solo en móvil */
+    
+    #contact-list {
+        display: none; /* Oculto inicialmente en móvil */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 2000;
+        border-radius: 0;
+        padding-top: 4rem; /* Espacio para que no choque con el header */
+    }
+}
