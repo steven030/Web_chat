@@ -85,7 +85,10 @@ def register():
                 try:
                     upload = imagekit.upload(
                         file=image_bytes, # Pasamos la variable con los bytes
-                        file_name=filename
+                        file_name=filename,
+                        options={
+            "use_unique_file_name": False  # <--- ESTO EVITA QUE IMAGEKIT CAMBIE EL NOMBRE
+        }
                     )
                     user.image = upload.url
                 except TypeError as e:
@@ -232,7 +235,10 @@ def profile_update():
             try:
                 upload = imagekit.upload(
                     file=images.read(),
-                    file_name=filename
+                    file_name=filename,
+                    options={
+            "use_unique_file_name": False  # <--- ESTO EVITA QUE IMAGEKIT CAMBIE EL NOMBRE
+        }
                 )
                 user.image = upload.url
 
