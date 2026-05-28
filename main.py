@@ -13,8 +13,7 @@ import forms
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 
-# INICIALIZACIÓN CORRECTA (SDK v5.5.2+)
-# Se usa únicamente la private_key como definimos en el test de Colab
+# INICIALIZACIÓN (SDK v5.5.2+)
 imagekit = ImageKit(private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"))
 
 socketio = SocketIO(app, async_mode='threading')
@@ -55,7 +54,6 @@ def register():
                 img_data.save(buffer, format=img_data.format or 'JPEG')
                 buffer.seek(0)
                 
-                # SUBIDA CORRECTA: Sin 'options'
                 upload_result = imagekit.files.upload(
                     file=buffer, 
                     file_name=filename, 
@@ -66,14 +64,9 @@ def register():
                     user.image = upload_result.url
                 else:
                     raise Exception("La API no devolvió una URL válida.")
-                    
             except Exception as e:
-                # Esto imprimirá el error real en los logs de Render
-                print(f"--- ERROR DETALLADO DE IMAGEKIT ---")
-                print(e)
-                print(f"Tipo de error: {type(e)}")
-                flash(f"Error al subir: {str(e)}") 
-                return render_template('profile_updat.html', form=update_form)
+                print(f"--- ERROR REGISTRO: {e} ---")
+                user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
         else:
             user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
 
@@ -119,12 +112,12 @@ def profile_update():
         if image_file and image_file.filename:
             filename = secure_filename(f"{user.username}_{image_file.filename}")
             try:
+                # AQUÍ ESTABA EL ERROR: Usar 'img' y 'img.format'
                 img = Image.open(image_file.stream)
                 buffer = BytesIO()
-                img.save(buffer, format=img_data.format or 'JPEG')
+                img.save(buffer, format=img.format or 'JPEG')
                 buffer.seek(0)
 
-                # SUBIDA CORRECTA: Sin 'options'
                 result = imagekit.files.upload(
                     file=buffer,
                     file_name=filename,
@@ -137,11 +130,8 @@ def profile_update():
                     raise Exception("La API devolvió un resultado sin URL.")
 
             except Exception as e:
-                # Esto imprimirá el error real en los logs de Render
-                print(f"--- ERROR DETALLADO DE IMAGEKIT ---")
-                print(e)
-                print(f"Tipo de error: {type(e)}")
-                flash(f"Error al subir: {str(e)}") 
+                print(f"--- ERROR PROFILE_UPDATE: {e} ---")
+                flash(f"Error al subir: {str(e)}")
                 return render_template('profile_updat.html', form=update_form)
 
         db.session.commit()
