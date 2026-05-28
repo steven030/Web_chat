@@ -1,164 +1,66 @@
-/* RESET BASE */
+/* =========================
+   BASE (NO ROMPER DISEÑO)
+========================= */
 *{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-/* =========================
-   CONTAINER PRINCIPAL
-========================= */
 #WebContainer{
 	background: linear-gradient(to top, #7083e4 0%, #5169e0 100%);
-	padding-top: 0px;
-	display: block;
 	width: 100%;
-	min-height: 100vh; /* mejor que height fijo */
+	min-height: 40rem; /* en vez de height fijo */
+	display: block;
 }
 
 /* =========================
-   HEADER / NAV
-========================= */
-#content-header{
-	background-color: #5169e0;
-	color: white;
-	border-bottom: none;
-}
-
-#nav-container li a{
-	color: white;
-	font-weight: bold;
-	transition: 0.3s;
-}
-
-#nav-container li a:hover{
-	font-size: 1.1rem;
-}
-
-/* =========================
-   MAIN CONTENT
+   MAIN CONTAINER
 ========================= */
 #Webcontainer-main{
-	margin: 3rem auto;
-	padding: 2rem;
-	width: 90%;
-	max-width: 60rem;
-	min-height: auto;
+	margin: 5rem auto;
+	padding: 3rem;
+	width: 60rem;
+	max-width: 95%; /* CLAVE: evita overflow */
+	height: auto; /* CLAVE */
 	position: relative;
-	top: 0;
+	top: -5%; /* menos agresivo */
 	color: white;
-	font-weight: 500;
-}
-
-#Webcontainer-main h3{
-	margin: 1rem 0;
-	font-size: 2rem;
-	font-family: sans-serif;
-}
-
-#Webcontainer-main p{
-	margin: 1rem 0;
-	font-size: 1.1rem;
-	line-height: 1.6rem;
 }
 
 /* =========================
-   BOTONES
-========================= */
-#Webcontainer-main a{
-	display: inline-block;
-	margin: 0.5rem 0.5rem 0 0;
-	padding: 0.5rem 1rem;
-	text-decoration: none;
-	color: black;
-	background-color: #f4f4f4;
-	border: 1px solid #f4f4f4;
-	transition: 0.3s;
-	border-radius: 0.6rem;
-}
-
-#Webcontainer-main a:hover{
-	color: #0398;
-	border: 1px solid #0398;
-	box-shadow: 0px 0px 4px 0.02px #0398;
-}
-
-/* =========================
-   ABOUT SECTION (GRID RESPONSIVO)
+   ABOUT SECTION (SIN ROMPER INLINE-BLOCK)
 ========================= */
 #About-section{
+	display: block;
 	width: 100%;
-	padding: 2rem;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 1.5rem;
-}
-
-/* cards */
-#About-section article{
-	padding: 1rem;
-	width: 20rem;
-	min-height: 25rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	padding-left: 0; /* importante para móvil */
 	text-align: center;
-
-	font-size: 1.05rem;
-	line-height: 1.4rem;
-	font-family: sans-serif;
-
-	box-shadow: 0px 0px 6px 0.02px #0398;
-	border-radius: 1rem;
 }
 
-/* imagen dentro de card */
-#About-section article img{
-	width: 7rem;
-	height: 7rem;
-	margin-bottom: 1rem;
+#About-section article{
+	display: inline-block;
+	vertical-align: top;
+	margin: 1rem;
+	width: 20rem;
+	height: auto; /* CLAVE */
+	min-height: 30rem;
 }
 
 /* =========================
-   IMÁGENES DECORATIVAS
+   IMÁGENES
 ========================= */
-#cloud-img img{
-	width: 6rem;
-	height: auto;
-}
-
-#cont-img{
-	float: none;
-	margin: 1rem;
-}
-
-/* eliminar absolute problemático en mobile */
-#cont-img2,
-#cont-img3{
-	position: relative;
-	top: auto;
-	right: auto;
-	margin: 1rem;
-}
-
-#cont-img1 img{
-	width: 3.5rem;
-	padding: 1rem;
-	height: auto;
-}
-
-#cont-img3 img{
-	width: 5rem;
-	padding: 1rem;
-	height: auto;
+#About-section article img{
+	width: 8rem;
+	height: 8rem;
+	margin: 1rem auto;
+	display: block;
 }
 
 /* =========================
-   SVG
+   SVG FIX
 ========================= */
 svg{
-	display: block;
 	width: 100%;
 	position: relative;
 	left: 0;
@@ -166,31 +68,13 @@ svg{
 }
 
 /* =========================
-   MOVE SECTION
+   BREAKPOINT TABLET
 ========================= */
-#move-img{
-	width: 100%;
-	height: auto;
-	padding: 2rem 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 1rem;
-}
-
-#move-cont-img img{
-	width: 4rem;
-	height: auto;
-}
-
-/* =========================
-   RESPONSIVE BREAKPOINTS
-========================= */
-
-/* TABLET */
 @media (max-width: 1024px){
 	#Webcontainer-main{
-		padding: 1.5rem;
+		width: 90%;
+		padding: 2rem;
+		margin: 3rem auto;
 	}
 
 	#About-section article{
@@ -198,39 +82,37 @@ svg{
 	}
 }
 
-/* MOBILE */
+/* =========================
+   BREAKPOINT MOBILE
+========================= */
 @media (max-width: 768px){
 	#Webcontainer-main{
 		width: 95%;
-		padding: 1rem;
-	}
-
-	#Webcontainer-main h3{
-		font-size: 1.5rem;
-	}
-
-	#Webcontainer-main p{
-		font-size: 1rem;
+		padding: 1.5rem;
+		margin: 2rem auto;
+		top: 0;
 	}
 
 	#About-section{
-		padding: 1rem;
-		flex-direction: column;
-		align-items: center;
+		padding-left: 0;
 	}
 
 	#About-section article{
+		display: block;   /* CLAVE: evita que se aplasten */
 		width: 90%;
+		margin: 1rem auto;
 	}
 }
 
-/* SMALL MOBILE */
+/* =========================
+   MOBILE PEQUEÑO
+========================= */
 @media (max-width: 480px){
 	#Webcontainer-main{
-		margin: 1rem auto;
+		padding: 1rem;
 	}
 
 	#About-section article{
-		width: 100%;
+		width: 95%;
 	}
 }
