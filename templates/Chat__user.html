@@ -10,10 +10,16 @@
             <ul id="messages">
                 {% if history %}
                     {% for histori in history.items %}
-                        <div class="chat-main">
+                        {# Comparamos si el emisor del mensaje es el usuario actual #}
+                        {% set is_me = (histori[1] == username) %}
+                        
+                        <div class="chat-main {{ 'my-message' if is_me else 'other-message' }}">
+                            
+                            {% if not is_me %}
                             <div class="chat-avatar-wrapper">
                                 <img class="user_images" src="{{ histori[2] }}" alt="Avatar">
                             </div>
+                            {% endif %}
                             
                             <div class="chat-content-body">
                                 <span class="chat-username">{{ histori[1] }}</span>
@@ -21,6 +27,13 @@
                                     <p id="content">{{ histori[3] }}</p>
                                 </li>
                             </div>
+
+                            {% if is_me %}
+                            <div class="chat-avatar-wrapper">
+                                <img class="user_images" src="{{ histori[2] }}" alt="Avatar">
+                            </div>
+                            {% endif %}
+                            
                         </div>
                     {% endfor %}
                 {% endif %}
