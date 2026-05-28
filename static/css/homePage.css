@@ -1,118 +1,187 @@
-/* =========================
-   BASE (NO ROMPER DISEÑO)
-========================= */
 *{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
+.non-selectable{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+body{
+	overflow-x: hidden;
+	font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+
+#content-header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem;
+	border-bottom: 1px solid #e9e9e9;
+	background: white;
+}
+
+#logo-title{
+	font-size: 2rem;
+}
+
+#logo-title a{
+	text-decoration: none;
+	color: black;
+}
+
+#nav-container{
+	display: flex;
+	list-style: none;
+	gap: 1rem;
+}
+
+#nav-container li{
+	list-style: none;
+}
+
+#nav-container li a{
+	color: black;
+	text-decoration: none;
+	font-size: 1rem;
+	transition: 0.3s;
+}
+
+#nav-container li a:hover{
+	color: #0398;
+}
+
+/* MAIN CONTAINER */
+
 #WebContainer{
-	background: linear-gradient(to top, #7083e4 0%, #5169e0 100%);
 	width: 100%;
-	min-height: 40rem; /* en vez de height fijo */
-	display: block;
-}
-
-/* =========================
-   MAIN CONTAINER
-========================= */
-#Webcontainer-main{
-	margin: 5rem auto;
-	padding: 3rem;
-	width: 60rem;
-	max-width: 95%; /* CLAVE: evita overflow */
-	height: auto; /* CLAVE */
+	min-height: 100vh;
+	background: linear-gradient(to bottom, #4e67df, #7083e4);
 	position: relative;
-	top: -5%; /* menos agresivo */
-	color: white;
+	overflow: hidden;
 }
 
-/* =========================
-   ABOUT SECTION (SIN ROMPER INLINE-BLOCK)
-========================= */
-#About-section{
-	display: block;
+/* CLOUDS */
+
+#cloud-img{
+	position: relative;
 	width: 100%;
-	padding-left: 0; /* importante para móvil */
+	height: 500px;
+	overflow: hidden;
+}
+
+/* CONTENEDORES DE NUBES */
+
+#cont-img,
+#cont-img1,
+#cont-img2,
+#cont-img3{
+	position: absolute;
+}
+
+/* POSICIONES */
+
+#cont-img{
+	top: 40px;
+	left: 5%;
+}
+
+#cont-img1{
+	top: 120px;
+	right: 10%;
+}
+
+#cont-img2{
+	top: 250px;
+	left: 25%;
+}
+
+#cont-img3{
+	top: 180px;
+	right: 35%;
+}
+
+/* IMAGENES */
+
+.img-cloud{
+	width: 250px;
+	height: auto;
+	display: block;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+#Webcontainer-main{
+	position: relative;
+	z-index: 2;
+	text-align: center;
+	color: white;
+	padding: 3rem 2rem;
+}
+
+#Webcontainer-main h3{
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+#Webcontainer-main p{
+	max-width: 700px;
+	margin: auto;
+	line-height: 1.6;
+	font-size: 1.1rem;
+}
+
+/* MOVE IMAGE */
+
+#move-img{
+	margin-top: 2rem;
+}
+
+#move-cont-img img{
+	width: 80px;
+	height: auto;
+}
+
+/* ABOUT SECTION */
+
+#About-section{
+	background: white;
+	padding: 4rem 2rem;
+}
+
+#article-section{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 2rem;
+}
+
+#article-section article{
+	width: 300px;
 	text-align: center;
 }
 
-#About-section article{
-	display: inline-block;
-	vertical-align: top;
-	margin: 1rem;
-	width: 20rem;
-	height: auto; /* CLAVE */
-	min-height: 30rem;
+#article-section article img{
+	width: 120px;
+	height: auto;
+	margin-bottom: 1rem;
 }
 
-/* =========================
-   IMÁGENES
-========================= */
-#About-section article img{
-	width: 8rem;
-	height: 8rem;
-	margin: 1rem auto;
-	display: block;
+#article-section article p{
+	line-height: 1.5;
+	color: #444;
 }
 
-/* =========================
-   SVG FIX
-========================= */
-svg{
+/* FOOTER */
+
+footer{
 	width: 100%;
-	position: relative;
-	left: 0;
-	top: 0;
-}
-
-/* =========================
-   BREAKPOINT TABLET
-========================= */
-@media (max-width: 1024px){
-	#Webcontainer-main{
-		width: 90%;
-		padding: 2rem;
-		margin: 3rem auto;
-	}
-
-	#About-section article{
-		width: 18rem;
-	}
-}
-
-/* =========================
-   BREAKPOINT MOBILE
-========================= */
-@media (max-width: 768px){
-	#Webcontainer-main{
-		width: 95%;
-		padding: 1.5rem;
-		margin: 2rem auto;
-		top: 0;
-	}
-
-	#About-section{
-		padding-left: 0;
-	}
-
-	#About-section article{
-		display: block;   /* CLAVE: evita que se aplasten */
-		width: 90%;
-		margin: 1rem auto;
-	}
-}
-
-/* =========================
-   MOBILE PEQUEÑO
-========================= */
-@media (max-width: 480px){
-	#Webcontainer-main{
-		padding: 1rem;
-	}
-
-	#About-section article{
-		width: 95%;
-	}
+	padding: 1rem;
+	text-align: center;
 }
