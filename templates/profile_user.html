@@ -9,20 +9,19 @@
 
 	<div id="profile-container">
 
-		{%if url_img != None%}
-
-			<img id="user_img" src="{{url_img}}" alt="{{username}}">
-			<p id="user_name">{{username}}</p>
-
-			
-
+		{% if url_img %}
+		
+		    <img id="user_img" src="{{url_img}}" alt="{{username}}">
+		    <p id="user_name">{{username}}</p>
+		
+		{% else %}
+		
+		    <img id="user_img"
+		         src="https://ik.imagekit.io/wannab1/default.png"
+		         alt="{{username}}">
+		
 		{%endif%}
-
-		{%if url_img == None %}
-
-			<img src="{{url_for('static',filename='source/uploads/index.png')}}">
-
-		{%endif%}
+		
 		{%if username%}
 		<div id='nav-menu'>
 			<ul>
