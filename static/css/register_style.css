@@ -4,31 +4,36 @@
     box-sizing: border-box;
 }
 
-body {
+/* ==========================================
+   CORRECCIÓN RAÍZ: LIBERAR SCROLL EN PANTALLAS REALES
+   ========================================== */
+html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     background: #f4f6f9;
-    overflow-x: hidden;
-    min-height: 100vh; /* CORREGIDO: Permite que el cuerpo crezca verticalmente */
+    width: 100%;
+    min-height: 100vh; /* Permite que el cuerpo crezca según el contenido */
+    overflow-x: hidden; /* Evita scroll hacia los lados */
+    overflow-y: visible !important; /* Fuerza al navegador a permitir el scroll vertical */
 }
 
 /* ==========================================
-   CORRECCIÓN GLOBAL DEL NAV (EVITA SOBREPONERSE)
+   CORRECCIÓN GLOBAL DEL NAV
    ========================================== */
 header, #content-header {
     position: relative;
-    z-index: 9999 !important; /* Capa superior absoluta sobre cualquier tarjeta */
-    background-color: #ffffff; /* Asegura que el Nav sea opaco */
+    z-index: 9999 !important;
+    background-color: #ffffff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 /* ==========================================
-   CONTENEDOR PRINCIPAL
+   CONTENEDOR PRINCIPAL (ESCRITORIO)
    ========================================== */
 #login_container {
     width: 100% !important;
-    height: calc(100vh - 70px); /* Resta la altura estimada del Nav en escritorio */
+    height: calc(100vh - 70px); /* Altura fija solo para computadoras */
     display: flex;
-    flex-direction: row; /* Lado a lado en PC */
+    flex-direction: row;
     background-image: url("../source/images/register_form_img.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -65,7 +70,7 @@ header, #content-header {
     letter-spacing: -0.5px;
 }
 
-/* Bloques de Flask WTForms (Labels + Inputs) */
+/* Bloques de Flask WTForms */
 #login_container_form dd,
 #login_container_form .form_style,
 #login_container_form div {
@@ -83,7 +88,6 @@ header, #content-header {
     text-align: left;
 }
 
-/* Inputs de texto y contraseña */
 #form_login_input {
     width: 100% !important;
     height: 3.2rem;
@@ -102,9 +106,7 @@ header, #content-header {
     color: #222222;
 }
 
-/* ==========================================
-   CAMPO DE SUBIR IMAGEN (INPUT FILE)
-   ========================================== */
+/* Campo subir imagen */
 #select_img {
     color: rgba(255, 255, 255, 0.85);
     font-weight: 600;
@@ -115,7 +117,6 @@ header, #content-header {
     width: 100%;
 }
 
-/* Estilo para el botón nativo de "Seleccionar archivo" */
 #select_img::-webkit-file-upload-button {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -125,16 +126,9 @@ header, #content-header {
     margin-right: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
 }
 
-#select_img::-webkit-file-upload-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* ==========================================
-   BOTÓN DE CONFIRMACIÓN (#send)
-   ========================================== */
+/* Botón Confirmar */
 #send {
     width: 100%;
     height: 3.2rem;
@@ -153,26 +147,18 @@ header, #content-header {
 
 #send:hover {
     background: #f8fafc;
-    color: #4e67df;
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(62, 80, 173, 0.3);
 }
 
-#send:active {
-    transform: translateY(0);
-}
-
-/* ==========================================
-   ENLACE INFERIOR (#link - CORREGIDO)
-   ========================================== */
+/* Enlace inferior */
 #link {
     text-decoration: none;
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.85);
     text-align: center;
-    transition: color 0.2s ease;
-    display: block;      /* Obliga a comportarse como bloque para centrarse */
-    margin-top: 1rem;    /* Espacio prudente abajo del botón CONFIRM */
+    display: block;
+    margin-top: 1rem;
     padding: 0.5rem;
     width: 100%;
 }
@@ -183,29 +169,28 @@ header, #content-header {
 }
 
 /* ==========================================
-   DISEÑO MÓVIL ADAPTATIVO 📱
+   DISEÑO MÓVIL ADAPTATIVO (MÓVILES REALES) 📱
    ========================================== */
 @media (max-width: 850px) {
     #login_container {
         flex-direction: column;
         background-image: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%) !important;
-        justify-content: flex-start; /* CORREGIDO: Empieza desde arriba para que el scroll tenga sentido */
+        justify-content: flex-start; /* Alinea al inicio para permitir scroll natural */
         align-items: center;
         padding: 2rem 1rem;
-        height: auto; 
+        height: auto !important; /* Libera la altura fija en móviles */
         min-height: calc(100vh - 70px);
-        overflow-y: auto; /* CORREGIDO: Activa de forma estricta el scroll vertical en móviles */
     }
 
     #login_container_form {
         width: 100% !important;
         max-width: 380px;
-        height: auto !important;
+        height: auto !important; /* La tarjeta se adapta al tamaño del formulario */
         border-radius: 24px;
         padding: 2.5rem 2rem;
-        box-shadow: 0 15px 35px rgba(14, 34, 54, 0.2);
-        margin-top: 1.5rem; /* Da un respiro elegante entre la barra superior y la tarjeta */
-        margin-bottom: 1.5rem;
+        box-shadow: 0 15px 35px rgba(14, 34, 54, 0.15);
+        margin-top: 1rem;
+        margin-bottom: 2rem; /* Espacio al final para que no choque con el borde del celular */
     }
 
     #login_container_form h2 {
