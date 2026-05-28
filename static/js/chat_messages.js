@@ -22,30 +22,43 @@ function selectUser(userId, username) {
 
 function renderizarMensaje(sender, text, image, isMe) {
     const css = isMe ? 'my-message' : 'other-message';
+    
+    // DEFINIMOS EL COMPONENTE AVATAR CON EL CONTENEDOR CORRECTO
+    const avatarHTML = `
+        <div class="chat-avatar-wrapper">
+            <img src="${image}" class="user_images">
+        </div>`;
+
     const html = `
         <div class="chat-main ${css}">
-            ${!isMe ? `<img src="${image}" class="user_images">` : ''}
+            ${!isMe ? avatarHTML : ''}
             <div class="chat-content-body">
-                <span>${sender}</span>
+                <span class="chat-username">${sender}</span>
                 <li class="chat-box"><p>${text}</p></li>
             </div>
-            ${isMe ? `<img src="${image}" class="user_images">` : ''}
+            ${isMe ? avatarHTML : ''}
         </div>`;
+        
     $('#messages').append(html);
 }
 
 socket.on('receive_private_message', (msg) => {
     renderizarMensaje(msg.sender, msg.message, msg.img, msg.sender === currentUsername);
+    // Opcional: auto-scroll al final después de recibir
+    $('#sub-message').scrollTop($('#sub-message')[0].scrollHeight);
 });
 
 $(document).ready(function() {
-    $("form").keydown(function(e) {
+    // Escucha el input directamente, no el form para evitar problemas de submit
+    $('#my_message').keydown(function(e) {
         if (e.which === 13) {
             e.preventDefault();
-            let valor = $('#my_message').val().trim();
+            let valor = $(this).val().trim();
             if (valor !== '' && currentReceiverId) {
                 socket.emit('private_message', { 'receiver_id': currentReceiverId, 'message': valor });
-                $('#my_message').val('');
+                $(this).val('');
+            } else if (!currentReceiverId) {
+                alert("Selecciona un usuario primero");
             }
         }
     });
