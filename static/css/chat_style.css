@@ -1,20 +1,24 @@
+/* Limpieza inicial */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: sans-serif; background-color: #f4f6f9; height: 100vh; overflow: hidden; }
+
+/* Contenedor principal: Flexbox para alinear lista y chat */
 #chat-page-wrapper {
-    width: 100%;
+    display: flex;
     height: calc(100vh - 70px);
-    display: flex; /* Mantenemos flex */
     padding: 1rem;
-    gap: 1rem;     /* Espacio entre la lista y el chat */
+    gap: 1rem;
 }
 
-/* NUEVO: Lista de contactos */
+/* ==========================================
+   BARRA LATERAL (LISTA DE USUARIOS)
+   ========================================== */
 #contact-list {
     width: 250px;
-    background-color: #ffffff;
+    background: #ffffff;
     border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 1rem;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow-y: auto;
 }
 
@@ -24,23 +28,59 @@
     background: #f8fafc;
     border-radius: 10px;
     cursor: pointer;
-    transition: background 0.2s;
     list-style: none;
+    transition: 0.2s;
 }
 
-.user-item:hover {
-    background: #e2e8f0;
+.user-item:hover, .user-item.active {
+    background: #4e67df;
+    color: white;
 }
 
-/* Ajuste del contenedor de mensajes para que ocupe el resto */
+/* ==========================================
+   ÁREA DEL CHAT
+   ========================================== */
 #message {
-    flex: 1; /* Esto hace que el chat ocupe todo el espacio sobrante */
-    max-width: none; /* Quitamos el max-width fijo para usar el espacio disponible */
-    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #ffffff;
+    background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
+
+#sub-message {
+    flex: 1;
+    background: #f8fafc;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+#messages {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Burbujas y Avatares */
+.chat-main { display: flex; align-items: flex-start; gap: 0.75rem; width: 100%; }
+.my-message { justify-content: flex-end; }
+.other-message { justify-content: flex-start; }
+
+.chat-avatar-wrapper { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.chat-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+.chat-box {
+    padding: 0.75rem 1rem;
+    border-radius: 15px;
+    max-width: 300px;
+}
+
+.other-message .chat-box { background: #ffffff; border: 1px solid #e2e8f0; }
+.my-message .chat-box { background: #e4ffd4; border: 1px solid #ccebb5; }
+
+/* Input inferior */
+#input-container { padding: 1rem; border-top: 1px solid #e2e8f0; }
+#input-container input { width: 100%; padding: 0.8rem; border-radius: 20px; border: 1px solid #cbd5e1; }
