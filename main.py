@@ -56,23 +56,29 @@ def register():
         if image_file and image_file.filename:
             filename = secure_filename(f"{register_form.username.data}_{image_file.filename}")
             try:
-                img_data = Image.open(BytesIO(image_file.read()))
+                img_data = Image.open(image_file.stream)
                 buffer = BytesIO()
                 img_data.save(buffer, format=img_data.format or 'JPEG')
                 buffer.seek(0)
                 
-                upload = imagekit.upload(file=buffer, file_name=filename, options={"use_unique_file_name": False})
+                # SINTAXIS PARA V5.5.1: imagekit.files.upload
+                upload_result = imagekit.files.upload(
+                    file=buffer, 
+                    file_name=filename, 
+                    options={"use_unique_file_name": False}
+                )
                 
-                # Acceso seguro a la URL
-                if hasattr(upload, "response_metadata"):
-                    user.image = getattr(upload.response_metadata, "raw", {}).get("url")
+                # Acceso directo al atributo .url que provee el SDK 5.5.1
+                if hasattr(upload_result, "url"):
+                    user.image = upload_result.url
                 else:
-                    user.image = getattr(upload, "url", None)
+                    raise Exception("La API no devolvió una URL válida.")
+                    
             except Exception as e:
-                print(f"Error en subida: {e}")
-                user.image = "https://ik.imagekit.io/wannab1/default.png"
+                print(f"Error en subida (v5.5.1): {e}")
+                user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
         else:
-            user.image = "https://ik.imagekit.io/wannab1/default.png"
+            user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
 
         db.session.add(user)
         db.session.commit()
