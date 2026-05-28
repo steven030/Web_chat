@@ -1,44 +1,30 @@
-{%extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 
+{% block content %}
+<div id="profile-main-wrapper">
+    <div id="profile-container">
 
-{%block content%}
-<body id="container-all">
-	{%from 'macro.html' import renderform%}
+        <div class="avatar-container">
+            {% if url_img %}
+                <img id="user_img" src="{{ url_img }}" alt="{{ username }}">
+            {% else %}
+                <img id="user_img" src="https://ik.imagekit.io/wannab1/default.png" alt="{{ username }}">
+            {% endif %}
+        </div>
+        
+        {% if username %}
+            <h2 id="user_name">{{ username }}</h2>
+            
+            <div id="nav-menu">
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('chat_user') }}">Chat</a></li>
+                    <li><a href="{{ url_for('profile_update') }}">Edit profile</a></li>
+                    <li id="logout"><a href="{{ url_for('loggout') }}">Logout</a></li>
+                </ul>
+            </div>
+        {% endif %}
 
-
-
-	<div id="profile-container">
-
-		{% if url_img %}
-		
-		    <img id="user_img" src="{{url_img}}" alt="{{username}}">
-		    <p id="user_name">{{username}}</p>
-		
-		{% else %}
-		
-		    <img id="user_img"
-		         src="https://ik.imagekit.io/wannab1/default.png"
-		         alt="{{username}}">
-		
-		{%endif%}
-		
-		{%if username%}
-		<div id='nav-menu'>
-			<ul>
-
-				<li><a href="{{ url_for('index') }}"><p>Home</p></a>
-				<li><a href="{{ url_for('chat_user') }}"><p>Chat</p></a>
-				<li><a href="{{ url_for('profile_update') }}"><p>Edit profile</p></a>
-				<li id="logout"><a  href="{{ url_for('loggout') }}">Logout</a></li>
-				<br>
-
-				
-			</ul>
-		</div>
-		{%endif%}
-	</div>
-
-
-
-{%endblock%}
-</body>
+    </div>
+</div>
+{% endblock %}
