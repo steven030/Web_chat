@@ -117,27 +117,40 @@ def profile_update():
                 img_data.save(buffer, format=img_data.format or 'JPEG')
                 buffer.seek(0)
                 
+                # Ejecutamos la subida
                 upload = imagekit.upload(file=buffer, file_name=filename, options={"use_unique_file_name": False})
                 
-                if hasattr(upload, "response_metadata"):
-                    user.image = getattr(upload.response_metadata, "raw", {}).get("url")
-                else:
-                    user.image = getattr(upload, "url", None)
+                # EXTRACCIÓN SEGURA (Sin usar __dict__ ni getattr peligrosos)
+                # Si 'upload' es un objeto, intentamos acceder a 'url'. 
+                # Si es un diccionario, accedemos por llave ['url'].
                 
-                # Validación de seguridad: si la subida falló y no hay URL, no seguimos
-                if not user.image:
-                    flash("Error al subir la imagen a ImageKit.")
-                    return render_template('profile_updat.html', form=update_form)
+                url_obtenida = None
+                
+                if isinstance(upload, dict):
+                    url_obtenida = upload.get("url")
+                else:
+                    # En los objetos del SDK, la propiedad suele ser simplemente .url
+                    url_obtenida = getattr(upload, "url", None)
+                    
+                    # Si sigue siendo None, intentamos acceder a la propiedad 'response' 
+                    # o 'response_metadata' si existen
+                    if not url_obtenida and hasattr(upload, "response_metadata"):
+                        url_obtenida = getattr(upload.response_metadata, "raw", {}).get("url")
+                
+                if url_obtenida:
+                    user.image = url_obtenida
+                else:
+                    raise Exception("La API no devolvió una URL válida")
 
             except Exception as e:
                 print(f"Error en update: {e}")
-                flash("Ocurrió un error al procesar la imagen.")
+                flash("Error al subir la imagen. Intenta de nuevo.")
                 return render_template('profile_updat.html', form=update_form)
         
         db.session.commit()
         session['username'] = user.username
         session['user_img'] = user.image
-        flash("Perfil actualizado con éxito.")
+        flash("Perfil actualizado correctamente.")
         return redirect(url_for('profile'))
 
     return render_template('profile_updat.html', form=update_form)
