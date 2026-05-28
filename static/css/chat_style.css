@@ -1,15 +1,15 @@
-/* --- Limpieza y Base --- */
+/* --- Estructura Base --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; height: 100vh; overflow: hidden; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; height: 100vh; overflow: hidden; }
 
 #chat-page-wrapper {
     display: flex;
-    height: calc(100vh - 70px);
+    height: 100vh;
     padding: 1rem;
     gap: 1rem;
 }
 
-/* --- Barra Lateral --- */
+/* --- Barra Lateral de Usuarios --- */
 #contact-list {
     width: 280px;
     background: #ffffff;
@@ -25,8 +25,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     background: #f8fafc;
     border-radius: 12px;
     cursor: pointer;
-    list-style: none;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
     border: 1px solid #edf2f7;
 }
 
@@ -35,7 +34,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     color: white;
 }
 
-/* --- Área del Chat --- */
+/* --- Área de Mensajes --- */
 #message {
     flex: 1;
     display: flex;
@@ -60,33 +59,35 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     gap: 1.5rem;
 }
 
-/* --- Gestión de Burbujas y Fotos --- */
+/* --- Burbujas de Chat --- */
 .chat-main { display: flex; align-items: flex-end; gap: 0.75rem; width: 100%; }
 .my-message { justify-content: flex-end; }
 .other-message { justify-content: flex-start; }
 
-/* Corrección de la foto: Forzamos tamaño y recorte */
+/* --- CORRECCIÓN DE IMÁGENES (AVATARES) --- */
+/* El contenedor envuelve la imagen y fuerza el tamaño 40x40 */
 .chat-avatar-wrapper { 
     width: 40px; 
     height: 40px; 
     border-radius: 50%; 
-    overflow: hidden; 
+    overflow: hidden; /* Corta el sobrante */
     flex-shrink: 0; 
-    background-color: #eee;
+    background-color: #e2e8f0;
 }
 
+/* La imagen rellena el contenedor usando object-fit para no deformarse */
 .chat-avatar-wrapper img { 
     width: 100%; 
     height: 100%; 
-    object-fit: cover; /* ESTO EVITA LA DISTORSIÓN */
+    object-fit: cover; /* Mantiene la proporción y recorta el exceso */
     display: block;
 }
 
+/* Estilo de los globos de texto */
 .chat-box {
     padding: 0.8rem 1.2rem;
     border-radius: 18px;
     max-width: 60%;
-    position: relative;
     font-size: 0.95rem;
     line-height: 1.4;
 }
@@ -96,7 +97,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
 
 .chat-username { font-size: 0.7rem; color: #718096; margin-bottom: 4px; display: block; }
 
-/* --- Input --- */
+/* --- Input Inferior --- */
 #input-container { padding: 1.5rem; border-top: 1px solid #edf2f7; }
 #my_message { 
     width: 100%; 
@@ -104,6 +105,5 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-
     border-radius: 25px; 
     border: 2px solid #e2e8f0; 
     outline: none;
-    transition: border 0.3s;
 }
 #my_message:focus { border-color: #4e67df; }
