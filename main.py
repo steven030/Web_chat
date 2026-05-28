@@ -42,6 +42,12 @@ with app.app_context():
     db.create_all()
 
 
+
+class ImageKitOptions:
+    def __init__(self, use_unique_file_name=False):
+        self.use_unique_file_name = use_unique_file_name
+
+
 @app.before_request
 def before_request():
     if 'username' not in session and request.endpoint in ['chat_user', 'profile', 'loggout', 'profile_update']:
@@ -72,7 +78,7 @@ def register():
 
         if request.files:
             images = request.files.get('imagen')
-            
+
             if images and images.filename != '':
                 filename = secure_filename(
                     register_form.username.data + "_" + images.filename
@@ -81,14 +87,14 @@ def register():
                 images.seek(0)
                 image_bytes = images.read()
             
-                # Creamos el objeto de opciones compatible con la librería vieja
-                subida_opciones = UploadOptions(use_unique_file_name=False)
+                # Instanciamos nuestro objeto casero compatible
+                subida_opciones = ImageKitOptions(use_unique_file_name=False)
             
                 try:
                     upload = imagekit.upload(
                         file=image_bytes,
                         file_name=filename,
-                        options=subida_opciones # <--- Pasamos el objeto aquí
+                        options=subida_opciones # <--- El SDK leerá esto felizmente
                     )
                     user.image = upload.response_metadata.raw["url"]
                 except TypeError as e:
@@ -98,7 +104,7 @@ def register():
                     else:
                         raise e
             else:
-                user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
+                user.image = "https://ik.imagekit.io/wannab1/default.png"
                 
         db.session.add(user)
         db.session.commit()
