@@ -1,10 +1,11 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+{% from 'macro.html' import renderform %}
+
 <div id="chat-page-wrapper">
     <div id="message">
         
-        <!-- Área scrollable donde viven los mensajes -->
         <div id="sub-message">
             <ul id="messages">
                 {% if history %}
@@ -26,10 +27,9 @@
             </ul>
         </div>
 
-        <!-- Área fija inferior para escribir un mensaje -->
         <div id="input-container">
             <form method="POST" accept-charset="utf-8">
-                {{ renderform(form.comment, id="my_message", placeholder="Escribe un mensaje aquí...") }}
+                {{ form.hidden_tag() }} {{ renderform(form.comment, id="my_message", placeholder="Escribe un mensaje aquí...", autocomplete="off") }}
             </form>
         </div>
 
