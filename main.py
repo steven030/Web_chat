@@ -24,11 +24,11 @@ app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 
 
-imagekit = ImageKit()
-
-imagekit.public_key = os.getenv("IMAGEKIT_PUBLIC_KEY")
-imagekit.private_key = os.getenv("IMAGEKIT_PRIVATE_KEY")
-imagekit.url_endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT")
+imagekit = ImageKit(
+    public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
+    private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
+    url_endpoint=os.getenv("IMAGEKIT_URL_ENDPOINT")
+)
 
 socketio = SocketIO(
     app,
@@ -81,7 +81,7 @@ def register():
                     register_form.username.data + "_" + images.filename
                 )
 
-                upload = imagekit.upload_file(
+                upload = imagekit.upload(
                     file=images.read(),
                     file_name=filename
                 )
@@ -223,7 +223,7 @@ def profile_update():
                 update_form.username.data + "_" + images.filename
             )
 
-            upload = imagekit.upload_file(
+            upload = imagekit.upload(
                 file=images.read(),
                 file_name=filename
             )
@@ -285,8 +285,11 @@ def handle_messages(msg):
 @socketio.on('connect')
 def connect_user():
 
+    if 'username' not in session:
+        return False
+
     username = session['username']
-    img = session['user_img']
+    img = session.get('user_img')
 
     room = 0
     join_room(room)
