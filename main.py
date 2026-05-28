@@ -5,7 +5,6 @@ from flask_socketio import SocketIO, send
 from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
-from imagekitio.models.ImageKitConfig import ImageKitConfig
 
 from config import Is_delovepment
 from model import User, db, CommentUser
@@ -14,14 +13,11 @@ import forms
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
 
-config = ImageKitConfig(
+imagekit = ImageKit(
     public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
     private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
     url_endpoint=os.getenv("IMAGEKIT_URL_ENDPOINT")
 )
-
-# 2. Inicializamos ImageKit usando el objeto config
-imagekit = ImageKit(config)
 
 socketio = SocketIO(app, async_mode='threading')
 db.init_app(app)
