@@ -6,8 +6,9 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
 
+ 
 from config import Is_delovepment
-from model import User, db, CommentUser
+from model import User, db, CommentUser, PrivateMessage 
 import forms
 
 app = Flask(__name__)
@@ -91,10 +92,26 @@ def loggout():
     session.clear()
     return redirect(url_for('index'))
 
+
 @app.route('/chat_user', methods=['GET', 'POST'])
 def chat_user():
-    commentList = CommentUser.query.join(User).add_columns(User.username, User.image, CommentUser.text).paginate(page=request.args.get('page', 1, type=int), per_page=20, error_out=False)
-    return render_template('Chat__user.html', username=session.get('username'), img=session.get('user_img'), history=commentList, form=forms.Chat_post(request.form))
+    # 1. Obtener lista de todos los usuarios para el panel izquierdo
+    # Excluimos al usuario actual para no mostrarse a sí mismo
+    users = User.query.filter(User.username != session.get('username')).all()
+    
+    # 2. Mantener la lógica de comentarios (opcional: puedes cambiar esto a PrivateMessage más adelante)
+    commentList = CommentUser.query.join(User).add_columns(
+        User.username, User.image, CommentUser.text
+    ).paginate(page=request.args.get('page', 1, type=int), per_page=20, error_out=False)
+    
+    return render_template(
+        'Chat__user.html', 
+        username=session.get('username'), 
+        img=session.get('user_img'), 
+        history=commentList, 
+        all_users=users,  # <--- Esta es la variable que tu HTML necesita
+        form=forms.Chat_post(request.form)
+    )
 
 @app.route('/profile')
 def profile():
