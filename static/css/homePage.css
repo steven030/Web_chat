@@ -1,235 +1,241 @@
-*{
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html{
-	scroll-behavior: smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-	overflow-x: hidden;
-	overflow-y: auto;
-	font-family: Arial, sans-serif;
-	background: #fff;
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+    background: #fff;
 }
 
 /* =========================
    HEADER
 ========================= */
 
-#content-header{
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 1rem 2rem;
-	border-bottom: 1px solid #e9e9e9;
-	background: white;
-	position: relative;
-	z-index: 100;
+#content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e9e9e9;
+    background: white;
+    position: relative;
+    z-index: 100;
 }
 
-#logo-title{
-	font-size: 2rem;
+#logo-title {
+    font-size: 2rem;
 }
 
-#logo-title a{
-	text-decoration: none;
-	color: black;
+#logo-title a {
+    text-decoration: none;
+    color: black;
 }
 
-#nav-container{
-	display: flex;
-	gap: 1rem;
-	list-style: none;
+#nav-container {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
 }
 
-#nav-container li a{
-	color: black;
-	text-decoration: none;
+#nav-container li a {
+    color: black;
+    text-decoration: none;
 }
 
 /* =========================
    MAIN WRAPPER
 ========================= */
 
-#WebContainer{
-	width: 100%;
-	min-height: 100vh;
-	position: relative;
-	background: linear-gradient(to bottom, #4e67df, #7083e4);
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
+#WebContainer {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background: linear-gradient(to bottom, #4e67df, #7083e4);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Organiza el héroe y la ola verticalmente */
 }
 
 /* =========================
    CLOUDS
 ========================= */
 
-#cloud-img{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	pointer-events: none;
+#cloud-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
 }
 
 #cont-img,
 #cont-img1,
 #cont-img2,
-#cont-img3{
-	position: absolute;
+#cont-img3 {
+    position: absolute;
 }
 
-#cont-img{ top: 40px; left: 5%; }
-#cont-img1{ top: 120px; right: 10%; }
-#cont-img2{ top: 250px; left: 25%; }
-#cont-img3{ top: 180px; right: 35%; }
+#cont-img { top: 40px; left: 5%; }
+#cont-img1 { top: 120px; right: 10%; }
+#cont-img2 { top: 250px; left: 25%; }
+#cont-img3 { top: 180px; right: 35%; }
 
-.img-cloud{
-	width: 160px;
-	height: auto;
-	display: block;
+.img-cloud {
+    width: 160px;
+    height: auto;
+    display: block;
 }
 
 /* =========================
    HERO
 ========================= */
 
-#Webcontainer-main{
-	position: relative;
-	z-index: 2;
-
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	text-align: center;
-	color: white;
-	padding: 2rem;
+#Webcontainer-main {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 4rem 2rem 2rem 2rem; /* Añadido un poco más de espacio superior */
 }
 
-#Webcontainer-main h3{
-	font-size: 3rem;
-	margin-bottom: 1rem;
+#Webcontainer-main h3 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
-#Webcontainer-main p{
-	max-width: 700px;
-	line-height: 1.7;
-	font-size: 1.1rem;
+#Webcontainer-main p {
+    max-width: 700px;
+    line-height: 1.7;
+    font-size: 1.1rem;
 }
 
 /* =========================
    SCROLL ICON
 ========================= */
 
-#move-img{
-	margin-top: 2rem;
+#move-img {
+    margin-top: 2rem;
 }
 
-#move-cont-img img{
-	width: 80px;
-	height: auto;
+#move-cont-img img {
+    width: 80px;
+    height: auto;
 }
 
 /* =========================
-   WAVE
+   WAVE (CORREGIDO)
 ========================= */
 
-.wave{
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	line-height: 0;
-	z-index: 1;
+.wave {
+    width: 100%;
+    line-height: 0;
+    background-color: transparent;
+    margin-top: auto; /* Empuja la ola siempre al final de la sección azul */
+    position: relative;
+    z-index: 2;
 }
 
-.wave svg{
-	display: block;
-	width: 100%;
-	height: 180px;
+.wave svg {
+    display: block;
+    width: 100%;
+    height: 120px; /* Altura controlada para evitar cortes */
 }
 
-.wave path{
-	fill: #7083e4;
+.wave path {
+    fill: #ffffff; /* Ahora la ola dibuja en BLANCO para fusionarse con el fondo de abajo */
 }
 
 /* =========================
    ABOUT SECTION
 ========================= */
 
-#About-section{
-	background: white;
-	padding: 5rem 2rem;
+#About-section {
+    background: white;
+    padding: 4rem 2rem 6rem 2rem; /* Espaciado limpio respecto a la ola */
+    position: relative;
+    z-index: 3;
 }
 
-#article-section{
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 2rem;
+#article-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem; /* Un poco más de separación entre tarjetas */
 }
 
-#article-section article{
-	width: 300px;
-	text-align: center;
-	padding: 1rem;
+#article-section article {
+    width: 300px;
+    text-align: center;
+    padding: 1rem;
 }
 
-#article-section article img{
-	width: 120px;
-	height: auto;
-	margin-bottom: 1rem;
+#article-section article img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 1.5rem;
 }
 
-#article-section article p{
-	line-height: 1.6;
-	color: #444;
+#article-section article p {
+    line-height: 1.6;
+    color: #444;
 }
 
 /* =========================
    FOOTER
 ========================= */
 
-footer{
-	text-align: center;
-	padding: 1rem;
-	background: white;
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: white;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
 
-	#content-header{
-		flex-direction: column;
-		gap: 1rem;
-	}
+    #content-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
 
-	#Webcontainer-main h3{
-		font-size: 2rem;
-	}
+    #Webcontainer-main h3 {
+        font-size: 2.2rem;
+    }
 
-	.img-cloud{
-		width: 120px;
-	}
+    .img-cloud {
+        width: 110px;
+    }
+    
+    .wave svg {
+        height: 70px; /* Se hace más pequeña en móviles para que no robe pantalla */
+    }
 
-	#article-section{
-		flex-direction: column;
-		align-items: center;
-	}
+    #article-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
 
-	#article-section article{
-		width: 90%;
-	}
+    #article-section article {
+        width: 90%;
+    }
 }
