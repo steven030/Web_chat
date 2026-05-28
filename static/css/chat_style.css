@@ -1,6 +1,5 @@
 /* --- 1. Reseteo y Base --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html, body {
     height: 100%;
     margin: 0;
@@ -9,14 +8,14 @@ html, body {
     background-color: #f4f6f9;
 }
 
-/* --- 2. Contenedor Principal (Ajustado al Header) --- */
+/* --- 2. Layout Principal --- */
 #chat-page-wrapper {
     display: flex;
-    /* Restamos 70px que es la altura aproximada de tu header */
-    height: calc(100vh - 70px); 
+    height: calc(100vh - 70px); /* Ajuste para no solaparse con el header */
     padding: 1rem;
     gap: 1rem;
     overflow: hidden;
+    position: relative;
 }
 
 /* --- 3. Barra Lateral --- */
@@ -30,7 +29,7 @@ html, body {
     flex-shrink: 0;
 }
 
-/* --- 4. Área de Chat (Estructura Rígida) --- */
+/* --- 4. Área de Chat --- */
 #message {
     flex: 1;
     display: flex;
@@ -39,7 +38,7 @@ html, body {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     overflow: hidden;
-    min-height: 0; /* Vital para que el flexbox no se rompa */
+    min-height: 0;
 }
 
 #sub-message {
@@ -51,16 +50,39 @@ html, body {
 }
 
 #input-container { 
-    padding: 1.5rem; 
+    padding: 1rem; 
     border-top: 1px solid #edf2f7; 
-    flex-shrink: 0; /* Evita que el input se comprima */
+    flex-shrink: 0; 
     background: #fff;
 }
 
-/* --- 5. Responsividad --- */
+/* --- 5. Responsividad y Botón Móvil --- */
+#toggle-users {
+    display: none; /* Oculto en escritorio */
+    position: fixed;
+    top: 80px; left: 15px;
+    z-index: 1000;
+    padding: 0.6rem 1.2rem;
+    background: #4e67df;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
 @media (max-width: 768px) {
-    #chat-page-wrapper { padding: 0.5rem; gap: 0.5rem; }
-    #contact-list { display: none; } /* Ocultar en móvil */
+    #toggle-users { display: block; } /* Visible en móvil */
+    #chat-page-wrapper { padding: 0.5rem; gap: 0; }
+    
+    #contact-list {
+        display: none; /* Se oculta por defecto */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 2000;
+        border-radius: 0;
+    }
     #message { border-radius: 0; }
     .chat-box { max-width: 85%; }
 }
@@ -69,10 +91,12 @@ html, body {
 #messages { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
 .chat-main { display: flex; align-items: flex-start; gap: 0.75rem; width: 100%; margin-bottom: 1rem; }
 .my-message { justify-content: flex-end; }
-.my-message .chat-content-body { align-items: flex-end; }
 .other-message { justify-content: flex-start; }
 
 .chat-content-body { display: flex; flex-direction: column; align-items: flex-start; max-width: 70%; }
+.my-message .chat-content-body { align-items: flex-end; }
+
+/* Avatares */
 .chat-avatar-wrapper {
     width: 40px !important; height: 40px !important;
     min-width: 40px !important; border-radius: 50% !important;
@@ -81,11 +105,12 @@ html, body {
 }
 .chat-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover !important; display: block !important; }
 
+/* Burbujas */
 .chat-box { padding: 0.8rem 1.2rem; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; margin-top: 4px; }
 .other-message .chat-box { background: #edf2f7; color: #1a202c; border-bottom-left-radius: 4px; }
 .my-message .chat-box { background: #4e67df; color: white; border-bottom-right-radius: 4px; }
-
 .chat-username { font-size: 0.7rem; color: #718096; display: block; margin-bottom: 2px; }
 
+/* Input */
 #my_message { width: 100%; padding: 1rem; border-radius: 25px; border: 2px solid #e2e8f0; outline: none; }
 #my_message:focus { border-color: #4e67df; }
