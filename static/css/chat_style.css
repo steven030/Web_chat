@@ -59,7 +59,7 @@ body {
     gap: 1.2rem;
 }
 
-/* ESTRUCTURA DE BURBUJA DE MENSAJE */
+/* ESTRUCTURA BASE DE LA FILA DE MENSAJE */
 .chat-main {
     display: flex;
     align-items: flex-start;
@@ -86,7 +86,7 @@ body {
 .chat-content-body {
     display: flex;
     flex-direction: column;
-    max-width: 70%; /* Límite elegante de ancho para las burbujas */
+    max-width: 70%; /* Límite elegante de ancho para las burbujas en escritorio */
 }
 
 .chat-username {
@@ -94,22 +94,64 @@ body {
     font-weight: 700;
     color: #475569;
     margin-bottom: 0.2rem;
-    padding-left: 0.2rem;
 }
 
 .chat-box {
-    background-color: #ffffff;
     padding: 0.75rem 1rem;
-    border-radius: 4px 16px 16px 16px; /* Esquinas estilo chat moderno */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    border: 1px solid #e2e8f0;
     word-break: break-word; /* Rompe palabras largas automáticamente */
 }
 
 .chat-box p {
     font-size: 0.95rem;
-    color: #1e293b;
     line-height: 1.4;
+}
+
+/* =======================================================
+   DIFERENCIACIÓN DE BURBUJAS (PROPIOS VS OTROS)
+   ======================================================= */
+
+/* 1. Mensajes de los demás (Izquierda - Blanco/Gris) */
+.other-message {
+    justify-content: flex-start;
+}
+
+.other-message .chat-username {
+    padding-left: 0.2rem;
+}
+
+.other-message .chat-box {
+    background-color: #ffffff;
+    border-radius: 4px 16px 16px 16px; /* Esquina superior izquierda rígida */
+    border: 1px solid #e2e8f0;
+}
+
+.other-message .chat-box p {
+    color: #1e293b;
+}
+
+/* 2. Tus mensajes (Derecha - Verde WhatsApp) */
+.my-message {
+    justify-content: flex-end; /* Empuja el contenedor al extremo derecho */
+}
+
+.my-message .chat-content-body {
+    align-items: flex-end; /* Alinea el nombre de usuario y la burbuja a la derecha */
+}
+
+.my-message .chat-username {
+    padding-right: 0.2rem;
+}
+
+.my-message .chat-box {
+    background-color: #e4ffd4; /* Verde sutil premium */
+    border-radius: 16px 4px 16px 16px; /* Esquina superior derecha rígida */
+    border: 1px solid #ccebb5;
+}
+
+.my-message .chat-box p {
+    color: #111b21;
+    text-align: left; /* El texto interno mantiene lectura natural de izquierda a derecha */
 }
 
 /* Opcional: Estilo para notificaciones de "sistema" (ej: admin joined) */
@@ -175,6 +217,6 @@ body {
     }
     
     .chat-content-body {
-        max-width: 85%; /* Más espacio horizontal para texto en pantallas angostas */
+        max-width: 85%; /* Más espacio horizontal para el texto en pantallas angostas */
     }
 }
