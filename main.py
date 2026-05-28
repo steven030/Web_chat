@@ -76,21 +76,28 @@ def register():
         if request.files:
             images = request.files.get('imagen')
 
-            if images:
+            if images and images.filename != '':
                 filename = secure_filename(
                     register_form.username.data + "_" + images.filename
                 )
 
-                upload = imagekit.upload(
-                    file=images.read(),
-                    file_name=filename
-                )
-
-                user.image = upload.response_metadata.raw["url"]
-
-            else:
-                user.image = "https://ik.imagekit.io/wannab1/default.png"
-
+                try:
+                    upload = imagekit.upload(
+                        file=images.read(),
+                        file_name=filename
+                    )
+                    user.image = upload.response_metadata.raw["url"]
+                except TypeError as e:
+                    if "description" in str(e):
+                        # La imagen SÍ se sube a ImageKit, pero el SDK se rompe al procesar la respuesta.
+                        # Construimos la URL pública usando tu endpoint.
+                        endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
+                        user.image = f"{endpoint}/{filename}"
+                    else:
+                        raise e # Si es otro error diferente, lo mostramos
+                    else:
+                        user.image = "https://ik.imagekit.io/wannab1/default.png"
+                        
         db.session.add(user)
         db.session.commit()
 
@@ -217,22 +224,25 @@ def profile_update():
 
         images = request.files.get('imagen')
 
-        if images and images.filename != '':
+       if images and images.filename != '':
 
             filename = secure_filename(
                 update_form.username.data + "_" + images.filename
             )
 
-            upload = imagekit.upload(
-                file=images.read(),
-                file_name=filename
-            )
-
-            user.image = upload.response_metadata.raw["url"]
+            try:
+                upload = imagekit.upload(
+                    file=images.read(),
+                    file_name=filename
+                )
+                user.image = upload.response_metadata.raw["url"]
+            except TypeError as e:
+                if "description" in str(e):
+                    endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
+                    user.image = f"{endpoint}/{filename}"
+                else:
+                    raise e
             session['user_img'] = user.image
-
-        else:
-            filename = session['user_img']
 
         db.session.query(User).filter(User.id == session['user_id']).update({
             User.username: update_form.username.data,
