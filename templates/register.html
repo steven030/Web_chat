@@ -1,10 +1,8 @@
 {%extends 'base/base_logins.html'%}
 
-
 {%block title%} {{title}} {%endblock%}
 
 {%block content%}
-
 
 	{%from "macro.html" import renderform%}
 
@@ -14,20 +12,19 @@
 		
 		<div id="login_container_form">
 			
-			<form method="POST" accept-charset="utf-8" enctype="multipart/form-data" >
+			<form method="POST" accept-charset="utf-8" enctype="multipart/form-data" id="form_login">
 				<h2>REGISTER</h2>
 				{{renderform(form.username, id="form_login_input", class="form_style")}}
 				{{renderform(form.password, id="form_login_input", class="form_style")}}
 				{{renderform(form.confirm,  id="form_login_input", class="form_style")}}
-				<input type="file" src="{{url_for('static',filename='source/images/insertar_img.png')}}" id="select_img" name="imagen" value="" placeholder="">
+				
+				<input type="file" id="select_img" name="imagen">
 
 				{{renderform(form.honey_pot)}}
 				
 				<button id="send" type="submit">CONFIRM</button>
-				<br>
 
-				<a href="{{url_for('login')}}" id="link">you're a registered?</a>
-				<br>
+				<a href="{{url_for('login')}}" id="link">You're already registered? Log in</a>
 				
 			</form>
 		</div>
