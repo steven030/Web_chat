@@ -161,12 +161,13 @@ def profile_update():
 
 @socketio.on('message')
 def handle_messages(msg):
-    if msg and msg.strip():
-        user = User.query.filter_by(username=session.get('username')).first()
-        if user:
-            db.session.add(CommentUser(user_id=user.id, text=msg.strip()))
-            db.session.commit()
-            send({'username': session['username'], 'message': msg.strip(), 'img': session['user_img'], 'alert': 'false'}, broadcast=True)
+    if True == False:
+        if msg and msg.strip():
+            user = User.query.filter_by(username=session.get('username')).first()
+            if user:
+                db.session.add(CommentUser(user_id=user.id, text=msg.strip()))
+                db.session.commit()
+                send({'username': session['username'], 'message': msg.strip(), 'img': session['user_img'], 'alert': 'false'}, broadcast=True)
 
 
 
