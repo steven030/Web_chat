@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import os
 from os import remove
 from imagekitio import ImageKit
-
+from imagekitio.models.UploadOptions import UploadOptions
 # file .py inside project
 from config import Is_delovepment
 from model import User, db, CommentUser
@@ -78,19 +78,19 @@ def register():
                     register_form.username.data + "_" + images.filename
                 )
             
-                # Aseguramos que el puntero esté al principio del archivo
                 images.seek(0)
                 image_bytes = images.read()
             
+                # Creamos el objeto de opciones compatible con la librería vieja
+                subida_opciones = UploadOptions(use_unique_file_name=False)
+            
                 try:
                     upload = imagekit.upload(
-                        file=image_bytes, # Pasamos la variable con los bytes
+                        file=image_bytes,
                         file_name=filename,
-                        options={
-            "use_unique_file_name": False  # <--- ESTO EVITA QUE IMAGEKIT CAMBIE EL NOMBRE
-        }
+                        options=subida_opciones # <--- Pasamos el objeto aquí
                     )
-                    user.image = upload.url
+                    user.image = upload.response_metadata.raw["url"]
                 except TypeError as e:
                     if "description" in str(e):
                         endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
@@ -98,8 +98,8 @@ def register():
                     else:
                         raise e
             else:
-                user.image = "https://ik.imagekit.io/wannab1/default.png"
-
+                user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
+                
         db.session.add(user)
         db.session.commit()
 
@@ -226,6 +226,9 @@ def profile_update():
 
         images = request.files.get('imagen')
 
+        # actualizar username SIEMPRE
+        user.username = update_form.username.data
+
         if images and images.filename != '':
 
             filename = secure_filename(
@@ -237,9 +240,11 @@ def profile_update():
                     file=images.read(),
                     file_name=filename,
                     options={
-            "use_unique_file_name": False  # <--- ESTO EVITA QUE IMAGEKIT CAMBIE EL NOMBRE
-        }
+                        "use_unique_file_name": False
+                    }
                 )
+
+                # URL real de ImageKit
                 user.image = upload.url
 
             except TypeError as e:
@@ -249,20 +254,20 @@ def profile_update():
                 else:
                     raise e
 
-            session['user_img'] = user.image
-
-        db.session.query(User).filter(User.id == session['user_id']).update({
-            User.username: update_form.username.data,
-            User.image: user.image if images else session['user_img']
-        })
-
+        # guardar cambios en DB
         db.session.commit()
 
-        session['username'] = update_form.username.data
+        # sincronizar sesión
+        session['username'] = user.username
+        session['user_img'] = user.image
 
         return redirect(url_for('profile'))
 
-    return render_template('profile_updat.html', title=title, form=update_form)
+    return render_template(
+        'profile_updat.html',
+        title=title,
+        form=update_form
+    )
 
 
 @socketio.on('message')
