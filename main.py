@@ -1,12 +1,13 @@
 import os
 from io import BytesIO
+import base64  # Requerido para la conversión limpia a ImageKit
 from flask import Flask, request, render_template, url_for, session, redirect, flash
 from flask_socketio import SocketIO, send, join_room
 from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
 
-from config import Is_delovepment  # Mantengo el nombre de tu archivo de configuración
+from config import Is_delovepment  
 from model import User, db, CommentUser
 import forms
 
@@ -33,7 +34,6 @@ with app.app_context():
 # -------------------------
 @app.before_request
 def before_request():
-    # Sincronizado con 'loggout' (con doble 'g') para evitar el error 500 de Jinja/Werkzeug
     protected_endpoints = ['chat_user', 'profile', 'loggout', 'profile_update']
     guest_endpoints = ['login', 'register']
 
@@ -61,7 +61,6 @@ def register():
     register_form = forms.Register_user(request.form, request.files)
 
     if request.method == 'POST' and register_form.validate():
-        # Verificar si el usuario ya existe para evitar errores de duplicados
         existing_user = User.query.filter_by(username=register_form.username.data).first()
         if existing_user:
             flash("El nombre de usuario ya está registrado.")
@@ -80,16 +79,16 @@ def register():
 
             # --- PROCESAMIENTO Y VALIDACIÓN SEGURA DE IMAGEN ---
             try:
-                # 1. Validar la estructura de la imagen
                 img_validator = Image.open(BytesIO(image_bytes))
                 img_validator.verify()
                 
-                # 2. Reabrir el flujo limpio para evitar corrupción de puntero binario al subir
                 img_to_upload = Image.open(BytesIO(image_bytes))
                 output_buffer = BytesIO()
                 img_to_upload.save(output_buffer, format=img_to_upload.format)
                 output_buffer.seek(0)
-                clean_bytes = output_buffer.read()
+                
+                # Convertimos a Base64 string para una compatibilidad absoluta con ImageKit
+                base64_img = base64.b64encode(output_buffer.read()).decode('utf-8')
                 
             except Exception as e:
                 print(f"Error Pillow: {e}")
@@ -99,12 +98,11 @@ def register():
             # --- SUBIDA A IMAGEKIT ---
             try:
                 upload = imagekit.upload(
-                    file=clean_bytes,
+                    file=base64_img,  # Enviamos el string codificado en Base64
                     file_name=filename,
                     options={"use_unique_file_name": False}
                 )
                 
-                # Solución definitiva al bug '__dict__': procesar tanto si devuelve objeto como dict plano
                 if isinstance(upload, dict):
                     user.image = upload.get("url") or upload.get("response", {}).get("url")
                 else:
@@ -115,7 +113,6 @@ def register():
 
             except Exception as e:
                 print(f"Error de ImageKit API: {e}")
-                # Fallback manual si el SDK arroja fallos extraños
                 endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT", "").rstrip('/')
                 user.image = f"{endpoint}/{filename}"
         else:
@@ -155,7 +152,7 @@ def login():
 # -------------------------
 # LOGOUT
 # -------------------------
-@app.route('/loggout')  # Mantiene las dos 'g' requeridas por tu archivo HTML
+@app.route('/loggout')  
 def loggout():
     session.clear()
     return redirect(url_for('index'))
@@ -241,16 +238,18 @@ def profile_update():
                 output_buffer = BytesIO()
                 img_to_upload.save(output_buffer, format=img_to_upload.format)
                 output_buffer.seek(0)
-                clean_bytes = output_buffer.read()
+                
+                # Convertimos a Base64 string para el update
+                base64_img = base64.b64encode(output_buffer.read()).decode('utf-8')
             except Exception as e:
                 print(f"Error Pillow en update: {e}")
-                flash("Imagen inválida o corrupta.")
+                flash("Imagen inválida o corrupto.")
                 return redirect(url_for('profile_update'))
 
             # --- SUBIDA A IMAGEKIT ---
             try:
                 upload = imagekit.upload(
-                    file=clean_bytes,
+                    file=base64_img,  # Enviamos el string codificado en Base64
                     file_name=filename,
                     options={"use_unique_file_name": False}
                 )
@@ -303,7 +302,7 @@ def handle_messages(msg):
             send({
                 'username': username,
                 'message': msg.strip(),
-                'img': image,
+                'img': image,  # Enviamos la URL absoluta directa de ImageKit
                 'alert': 'false'
             }, broadcast=True)
 
@@ -320,6 +319,5 @@ def connect_user():
     }, broadcast=True)
 
 
-# -------------------------
 if __name__ == '__main__':
     socketio.run(app, debug=True)
