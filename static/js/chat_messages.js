@@ -1,5 +1,6 @@
 const socket = io();
 const currentUsername = window.currentUser || "";
+let currentReceiverId = null; // Variable global para el ID del destinatario
 
 // 1. Conexión y Unión a sala privada
 socket.on('connect', () => {
@@ -7,17 +8,32 @@ socket.on('connect', () => {
     socket.emit('join_private');
 });
 
-// 2. Escuchar mensajes privados
-socket.on('receive_private_message', function(msg) {
-    const sender = msg['sender'];
-    const messageText = msg['message'];
-    const image = msg['img'];
-
-    const isMe = (sender === currentUsername);
-    const messageClass = isMe ? 'my-message' : 'other-message';
+// 2. Función para seleccionar usuario (Llamada desde el HTML)
+function selectUser(userId, username) {
+    currentReceiverId = userId;
     
-    // Si la imagen viene de ImageKit, no uses el prefijo local
-    const avatarSrc = image.startsWith('http') ? image : `static/source/uploads/${image}`;
+    // UI: Resaltar seleccionado
+    $('.user-item').removeClass('active');
+    event.currentTarget.classList.add('active');
+    
+    // Limpiar pantalla actual
+    $('#messages').empty();
+    
+    // Cargar historial dinámicamente desde Flask
+    fetch(`/get_history/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(msg => {
+                renderizarMensaje(msg.sender, msg.text, msg.img, msg.is_me);
+            });
+            if (typeof window.scrollDiv === "function") window.scrollDiv();
+        });
+}
+
+// 3. Renderizado de mensajes (Usado tanto por historial como por socket)
+function renderizarMensaje(sender, text, image, isMe) {
+    const messageClass = isMe ? 'my-message' : 'other-message';
+    const avatarSrc = (image && image.startsWith('http')) ? image : `static/source/uploads/${image}`;
     
     const avatarHTML = `
         <div class="chat-avatar-wrapper">
@@ -28,7 +44,7 @@ socket.on('receive_private_message', function(msg) {
         <div class="chat-main ${messageClass} non-selectable">
             <div class="chat-content-body">
                 <span class="chat-username">${sender}</span>
-                <li class="chat-box"><p id="content">${messageText}</p></li>
+                <li class="chat-box"><p id="content">${text}</p></li>
             </div>
             ${avatarHTML}
         </div>` : `
@@ -36,23 +52,31 @@ socket.on('receive_private_message', function(msg) {
             ${avatarHTML}
             <div class="chat-content-body">
                 <span class="chat-username">${sender}</span>
-                <li class="chat-box"><p id="content">${messageText}</p></li>
+                <li class="chat-box"><p id="content">${text}</p></li>
             </div>
         </div>`;
 
     $('#messages').append(htmlContent);
+}
+
+// 4. Escuchar mensajes nuevos en tiempo real
+socket.on('receive_private_message', function(msg) {
+    // msg viene con {sender, message, img}
+    const isMe = (msg.sender === currentUsername);
+    renderizarMensaje(msg.sender, msg.message, msg.img, isMe);
+    
     sound('mensaje');
     if (typeof window.scrollDiv === "function") window.scrollDiv();
 });
 
-// 3. Manejo de Sonidos
+// 5. Manejo de Sonidos
 let sound = (param) => {
     let audio = new Audio(param === 'mensaje' ? "static/sounds/mensaje-sound.mp3" : "static/sounds/ALERT_29.mp3");
     audio.volume = 0.1;
     audio.play();
 };
 
-// 4. Control de Teclado (Envío de mensaje privado)
+// 6. Control de Teclado
 $(document).ready(function() {
     var pulsado = false;
     $("form").keydown(function(e) {
@@ -64,7 +88,6 @@ $(document).ready(function() {
             
             if (valorInput !== '' && currentReceiverId) {
                 pulsado = true;
-                // ENVIAR MENSAJE PRIVADO
                 socket.emit('private_message', {
                     'receiver_id': currentReceiverId,
                     'message': valorInput
