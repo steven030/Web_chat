@@ -62,7 +62,8 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     title = 'LOAD CODE'
-    register_form = forms.Register_user(request.form)
+    # CORRECCIÓN: Se añade request.files
+    register_form = forms.Register_user(request.form, request.files)
 
     if request.method == 'POST' and register_form.validate():
 
@@ -71,20 +72,22 @@ def register():
 
         if request.files:
             images = request.files.get('imagen')
-
+            
             if images and images.filename != '':
-
                 filename = secure_filename(
                     register_form.username.data + "_" + images.filename
                 )
-
+            
+                # Aseguramos que el puntero esté al principio del archivo
+                images.seek(0)
+                image_bytes = images.read()
+            
                 try:
                     upload = imagekit.upload(
-                        file=images.read(),
+                        file=image_bytes, # Pasamos la variable con los bytes
                         file_name=filename
                     )
                     user.image = upload.response_metadata.raw["url"]
-
                 except TypeError as e:
                     if "description" in str(e):
                         endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
@@ -209,7 +212,7 @@ def profile():
 @app.route('/profile_update', methods=['POST', 'GET'])
 def profile_update():
     title = 'Hi!'
-    update_form = forms.Profile_updte(request.form)
+    update_form = forms.Profile_updte(request.form, request.files)
 
     if 'username' not in session:
         return redirect(url_for('index'))
