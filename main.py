@@ -121,7 +121,7 @@ def profile_update():
             try:
                 img = Image.open(image_file.stream)
                 buffer = BytesIO()
-                img_data.save(buffer, format=img_data.format or 'JPEG')
+                img.save(buffer, format=img_data.format or 'JPEG')
                 buffer.seek(0)
 
                 # SUBIDA CORRECTA: Sin 'options'
