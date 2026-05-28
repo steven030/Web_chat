@@ -1,124 +1,241 @@
-<!doctype html>
-<html>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-<head>
-	<title>Hi!</title>
+html {
+    scroll-behavior: smooth;
+}
 
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/chat_style.css' ) }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css' ) }}">
-</head>
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+    background: #fff;
+}
 
-<body>
+/* =========================
+   HEADER
+========================= */
 
-	<header>
-		<div id="content-header">
+#content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e9e9e9;
+    background: white;
+    position: relative;
+    z-index: 100;
+}
 
-			<h2 id="logo-title">Hi!</h2>
+#logo-title {
+    font-size: 2rem;
+}
 
-			{% if username == None %}
-			<ul id="nav-container">
-				<li><a href="{{ url_for('login') }}">Login</a></li>
-				<li><a href="{{ url_for('register') }}">Register</a></li>
-			</ul>
-			{% endif %}
+#logo-title a {
+    text-decoration: none;
+    color: black;
+}
 
-			{% if username != None %}
-			<ul id="nav-container">
-				<li class="nav-container-li"><a href="{{ url_for('profile') }}">Profile</a></li>
-				<li class="nav-container-li"><a href="{{ url_for('loggout') }}">Logout</a></li>
-			</ul>
-			{% endif %}
+#nav-container {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}
 
-		</div>
-	</header>
+#nav-container li a {
+    color: black;
+    text-decoration: none;
+}
 
-	<div id="WebContainer">
+/* =========================
+   MAIN WRAPPER
+========================= */
 
-		<!-- CLOUDS -->
-		<div id="cloud-img">
+#WebContainer {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background: linear-gradient(to bottom, #4e67df, #7083e4);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Organiza el héroe y la ola verticalmente */
+}
 
-			<span id="cont-img">
-				<img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}">
-			</span>
+/* =========================
+   CLOUDS
+========================= */
 
-			<span id="cont-img1">
-				<img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}">
-			</span>
+#cloud-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
 
-			<span id="cont-img2">
-				<img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}">
-			</span>
+#cont-img,
+#cont-img1,
+#cont-img2,
+#cont-img3 {
+    position: absolute;
+}
 
-			<span id="cont-img3">
-				<img class="img-cloud" src="{{url_for('static',filename='source/images/Cloud.png')}}">
-			</span>
+#cont-img { top: 40px; left: 5%; }
+#cont-img1 { top: 120px; right: 10%; }
+#cont-img2 { top: 250px; left: 25%; }
+#cont-img3 { top: 180px; right: 35%; }
 
-		</div>
+.img-cloud {
+    width: 160px;
+    height: auto;
+    display: block;
+}
 
-		<!-- HERO -->
-		<div id="Webcontainer-main">
+/* =========================
+   HERO
+========================= */
 
-			<h3>What is Hi! ?</h3>
+#Webcontainer-main {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 4rem 2rem 2rem 2rem; /* Añadido un poco más de espacio superior */
+}
 
-			<p>
-				Hi there! is a platform for connected users all over the world, it allows you to talk with others without leaving home and have the opportunity to make friends.
-				what're you waiting for joining us?
-			</p>
+#Webcontainer-main h3 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
 
-			<div id="move-img">
-				<div id="move-cont-img">
-					<img src="{{url_for('static',filename='source/images/move.png')}}" alt="move mouse">
-				</div>
-			</div>
+#Webcontainer-main p {
+    max-width: 700px;
+    line-height: 1.7;
+    font-size: 1.1rem;
+}
 
-		</div>
+/* =========================
+   SCROLL ICON
+========================= */
 
-		<!-- WAVE (IMPORTANTE: FUERA DEL TEXTO, ABAJO DEL HERO) -->
-		<div class="wave">
-			<svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-				<path
-					d="M0,96L80,101.3C160,107,320,117,480,160C640,203,800,277,960,293.3C1120,309,1280,267,1360,245.3L1440,224L1440,320L0,320Z">
-				</path>
-			</svg>
-		</div>
+#move-img {
+    margin-top: 2rem;
+}
 
-		<!-- ABOUT -->
-		<div id="About-section">
+#move-cont-img img {
+    width: 80px;
+    height: auto;
+}
 
-			<section>
-				<div id="article-section">
+/* =========================
+   WAVE (CORREGIDO)
+========================= */
 
-					<article>
-						<img src="{{url_for('static',filename='source/images/hablar.png')}}">
-						<p>
-							Hi's objective is to bring together young people in a safe space where they can talk and socialize.
-						</p>
-					</article>
+.wave {
+    width: 100%;
+    line-height: 0;
+    background-color: transparent;
+    margin-top: auto; /* Empuja la ola siempre al final de la sección azul */
+    position: relative;
+    z-index: 2;
+}
 
-					<article>
-						<img src="{{url_for('static',filename='source/images/facil.png')}}">
-						<p>
-							The platform is easy to use and designed for simple interaction between users.
-						</p>
-					</article>
+.wave svg {
+    display: block;
+    width: 100%;
+    height: 120px; /* Altura controlada para evitar cortes */
+}
 
-					<article>
-						<img src="{{url_for('static',filename='source/images/people.png')}}">
-						<p>
-							People from different cultures connect here and build lasting friendships.
-						</p>
-					</article>
+.wave path {
+    fill: #ffffff; /* Ahora la ola dibuja en BLANCO para fusionarse con el fondo de abajo */
+}
 
-				</div>
-			</section>
+/* =========================
+   ABOUT SECTION
+========================= */
 
-		</div>
+#About-section {
+    background: white;
+    padding: 4rem 2rem 6rem 2rem; /* Espaciado limpio respecto a la ola */
+    position: relative;
+    z-index: 3;
+}
 
-	</div>
+#article-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem; /* Un poco más de separación entre tarjetas */
+}
 
-	{% block content %}
-	{% endblock %}
+#article-section article {
+    width: 300px;
+    text-align: center;
+    padding: 1rem;
+}
 
-</body>
+#article-section article img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
 
-</html>
+#article-section article p {
+    line-height: 1.6;
+    color: #444;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    #content-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #Webcontainer-main h3 {
+        font-size: 2.2rem;
+    }
+
+    .img-cloud {
+        width: 110px;
+    }
+    
+    .wave svg {
+        height: 70px; /* Se hace más pequeña en móviles para que no robe pantalla */
+    }
+
+    #article-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    #article-section article {
+        width: 90%;
+    }
+}
