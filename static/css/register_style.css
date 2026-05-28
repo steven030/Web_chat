@@ -8,7 +8,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     background: #f4f6f9;
     overflow-x: hidden;
-    height: 100vh;
+    min-height: 100vh; /* CORREGIDO: Permite que el cuerpo crezca verticalmente */
 }
 
 /* ==========================================
@@ -26,7 +26,7 @@ header, #content-header {
    ========================================== */
 #login_container {
     width: 100% !important;
-    height: calc(100vh - 70px); /* Resta la altura estimada del Nav para no empujar la web hacia abajo */
+    height: calc(100vh - 70px); /* Resta la altura estimada del Nav en escritorio */
     display: flex;
     flex-direction: row; /* Lado a lado en PC */
     background-image: url("../source/images/register_form_img.jpg");
@@ -139,7 +139,7 @@ header, #content-header {
     width: 100%;
     height: 3.2rem;
     margin-top: 1rem;
-    margin-bottom: 0.5rem; /* Margen ajustado para no empujar el link */
+    margin-bottom: 0.5rem;
     background: #ffffff;
     color: #4e67df;
     border: none;
@@ -189,11 +189,12 @@ header, #content-header {
     #login_container {
         flex-direction: column;
         background-image: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%) !important;
-        justify-content: center;
+        justify-content: flex-start; /* CORREGIDO: Empieza desde arriba para que el scroll tenga sentido */
         align-items: center;
         padding: 2rem 1rem;
-        height: auto; /* Permite crecimiento dinámico en pantallas móviles pequeñas */
+        height: auto; 
         min-height: calc(100vh - 70px);
+        overflow-y: auto; /* CORREGIDO: Activa de forma estricta el scroll vertical en móviles */
     }
 
     #login_container_form {
@@ -203,6 +204,8 @@ header, #content-header {
         border-radius: 24px;
         padding: 2.5rem 2rem;
         box-shadow: 0 15px 35px rgba(14, 34, 54, 0.2);
+        margin-top: 1.5rem; /* Da un respiro elegante entre la barra superior y la tarjeta */
+        margin-bottom: 1.5rem;
     }
 
     #login_container_form h2 {
