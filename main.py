@@ -108,6 +108,7 @@ def profile_update():
     if request.method == 'POST' and update_form.validate():
         user.username = update_form.username.data
         image_file = request.files.get('imagen')
+        
         if image_file and image_file.filename:
             filename = secure_filename(f"{user.username}_{image_file.filename}")
             try:
@@ -115,18 +116,30 @@ def profile_update():
                 buffer = BytesIO()
                 img_data.save(buffer, format=img_data.format or 'JPEG')
                 buffer.seek(0)
+                
                 upload = imagekit.upload(file=buffer, file_name=filename, options={"use_unique_file_name": False})
+                
                 if hasattr(upload, "response_metadata"):
                     user.image = getattr(upload.response_metadata, "raw", {}).get("url")
                 else:
                     user.image = getattr(upload, "url", None)
+                
+                # Validación de seguridad: si la subida falló y no hay URL, no seguimos
+                if not user.image:
+                    flash("Error al subir la imagen a ImageKit.")
+                    return render_template('profile_updat.html', form=update_form)
+
             except Exception as e:
                 print(f"Error en update: {e}")
+                flash("Ocurrió un error al procesar la imagen.")
+                return render_template('profile_updat.html', form=update_form)
         
         db.session.commit()
         session['username'] = user.username
         session['user_img'] = user.image
+        flash("Perfil actualizado con éxito.")
         return redirect(url_for('profile'))
+
     return render_template('profile_updat.html', form=update_form)
 
 @socketio.on('message')
