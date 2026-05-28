@@ -1,7 +1,7 @@
 import os
 from io import BytesIO
 from flask import Flask, request, render_template, url_for, session, redirect, flash
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, join_room, emit
 from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
@@ -150,6 +150,33 @@ def handle_messages(msg):
             db.session.add(CommentUser(user_id=user.id, text=msg.strip()))
             db.session.commit()
             send({'username': session['username'], 'message': msg.strip(), 'img': session['user_img'], 'alert': 'false'}, broadcast=True)
+
+
+
+@socketio.on('join_private')
+def on_join_private():
+    # Cada usuario se une a una sala con su ID al cargar la página
+    user_id = User.query.filter_by(username=session.get('username')).first().id
+    join_room(f"user_{user_id}")
+
+@socketio.on('private_message')
+def handle_private_message(data):
+    # data debe contener: {'receiver_id': 5, 'message': 'Hola!'}
+    sender = User.query.filter_by(username=session.get('username')).first()
+    receiver_id = data['receiver_id']
+    msg_text = data['message']
+
+    # 1. Guardar en BD
+    new_msg = PrivateMessage(sender_id=sender.id, receiver_id=receiver_id, text=msg_text)
+    db.session.add(new_msg)
+    db.session.commit()
+
+    # 2. Enviar solo al usuario destino
+    emit('receive_private_message', 
+         {'sender': sender.username, 'message': msg_text}, 
+         room=f"user_{receiver_id}")
+
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
