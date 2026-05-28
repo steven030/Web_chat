@@ -34,7 +34,7 @@ with app.app_context():
 @app.before_request
 def before_request():
     # Corregido 'loggout' por 'logout' para coincidir con la ruta exacta
-    protected_endpoints = ['chat_user', 'profile', 'logout', 'profile_update']
+    protected_endpoints = ['chat_user', 'profile', 'loggout', 'profile_update']
     guest_endpoints = ['login', 'register']
 
     if 'username' not in session and request.endpoint in protected_endpoints:
@@ -146,8 +146,8 @@ def login():
 # -------------------------
 # LOGOUT
 # -------------------------
-@app.route('/logout')  # Corregido de '/loggout' a '/logout'
-def logout():
+@app.route('/loggout')  # Corregido de '/loggout' a '/logout'
+def loggout():
     session.clear()
     return redirect(url_for('index'))
 
