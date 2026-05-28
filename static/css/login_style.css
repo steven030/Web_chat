@@ -5,13 +5,14 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f6f9; /* Fondo claro sutil para resaltar el formulario en móviles */
     overflow-x: hidden;
+    height: 100vh;
 }
 
 /* ==========================================
-   CONTENEDOR PRINCIPAL (PANTALLA DIVIDIDA)
+   CONTENEDOR PRINCIPAL 
    ========================================== */
 #login_container {
     width: 100%;
@@ -19,47 +20,42 @@ body {
     display: flex;
     background-image: url("../source/images/login_form_img.jpg");
     background-repeat: no-repeat;
-    background-size: cover; /* Cambiado a cover para que no queden huecos blancos si la pantalla es muy ancha */
+    background-size: cover;
     background-position: right center;
 }
 
 /* ==========================================
-   PANEL LATERAL DEL FORMULARIO
+   PANEL DEL FORMULARIO (ESCRITORIO)
    ========================================== */
 #login_container_form {
-    width: 40%; /* Mantiene el 40% de la pantalla */
+    width: 40%;
     height: 100%;
-    background: linear-gradient(135deg, #5169e0 0%, #7083e4 100%);
-    box-shadow: 4px 0 15px rgba(14, 34, 54, 0.3);
-    
-    /* Flexbox para centrar perfectamente el formulario vertical y horizontalmente */
+    background: linear-gradient(135deg, #4e67df 0%, #7083e4 100%);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    padding: 2.5rem;
     z-index: 2;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ==========================================
-   ESTILOS INTERNOS DEL FORMULARIO
-   ========================================== */
 #login_container_form form {
     width: 100%;
-    max-width: 360px; /* Limita el ancho para que los inputs no se estiren infinitamente */
+    max-width: 340px;
     display: flex;
-    flex-direction: column; /* Alinea los elementos uno abajo del otro en fila */
+    flex-direction: column;
 }
 
 #login_container_form h2 {
-    color: #fff;
-    font-size: 2.2rem;
+    color: #ffffff;
+    font-size: 2.4rem;
     font-weight: 700;
     margin-bottom: 2rem;
-    text-align: left;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.5px;
 }
 
-/* Manejo de los bloques que genera tu macro (renderform) */
+/* Contenedores de inputs (inyectados por tu macro) */
 #form_login .form_style, 
 #form_login div { 
     display: flex;
@@ -70,95 +66,120 @@ body {
 #form_login label {
     color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
 }
 
 #form_login input {
-    width: 100%; /* Toma el 100% del max-width del formulario */
-    height: 2.8rem;
-    border-radius: 8px;
+    width: 100%;
+    height: 3.2rem; /* Altura ideal para pantallas táctiles (mínimo 48px recomendados por Google/Apple) */
+    border-radius: 12px; /* Bordes más redondeados y modernos */
     border: 2px solid transparent;
-    padding: 0 1rem;
+    padding: 0 1.2rem;
     font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.15); /* Fondo semi-transparente moderno */
+    background-color: rgba(255, 255, 255, 0.12);
     color: #ffffff;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
-/* Marcador de posición (placeholder) en blanco sutil */
 #form_login input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* Efecto Focus al hacer click en los inputs */
 #form_login input:focus {
     outline: none;
     background-color: #ffffff;
-    color: #333;
+    color: #222222;
     border-color: #ffffff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* ==========================================
-   BOTÓN DE ACCIÓN
+   BOTÓN PREMIUM
    ========================================== */
 #form_login button {
-    width: 100%; /* Centrado y alineado perfectamente con los inputs */
-    height: 3rem;
+    width: 100%;
+    height: 3.2rem;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     background: #ffffff;
-    color: #5169e0;
+    color: #4e67df;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
 }
 
 #form_login button:hover {
-    background: #f6f6f6;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px); /* Pequeño efecto de elevación */
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 #form_login button:active {
-    transform: translateY(1px);
+    transform: translateY(0);
 }
 
-/* ==========================================
-   ENLACE DE REGISTRO
-   ========================================== */
+/* Enlace inferior */
 #form_login a {
     text-decoration: none;
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.85);
-    text-align: center; /* Centra el enlace al final del formulario */
+    text-align: center;
     transition: color 0.2s ease;
-    margin-top: 0.5rem;
+    padding: 0.5rem;
 }
 
 #form_login a:hover {
     color: #ffffff;
-    text-decoration: underline;
 }
 
 /* ==========================================
-   RESPONSIVE (MÓVILES Y TABLETS)
+   MÓVILES (PANTALLAS GRANDES Y PEQUEÑAS) 📱
    ========================================== */
-@media (max-width: 900px) {
-    #login_container_form {
-        width: 100%; /* El formulario toma toda la pantalla en móviles */
-        padding: 2rem;
-    }
-    
+@media (max-width: 850px) {
     #login_container {
-        background-image: none; /* Quitamos la imagen de fondo de la chica en móviles para enfocar el login */
-        background-color: #5169e0;
+        /* En móviles usamos un fondo con gradiente general suave */
+        background-image: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%);
+        justify-content: center;
+        align-items: center;
+    }
+
+    #login_container_form {
+        width: 90%; /* Ya no ocupa toda la pantalla de forma tosca, se vuelve una tarjeta elegante */
+        height: auto;
+        max-height: 92vh;
+        border-radius: 24px; /* Tarjeta curva premium estilo App moderna */
+        padding: 3rem 2rem;
+        box-shadow: 0 15px 35px rgba(14, 34, 54, 0.25);
+        overflow-y: auto; /* Asegura scroll interno si el teléfono es muy pequeño */
+    }
+
+    #login_container_form h2 {
+        font-size: 2.1rem;
+        text-align: center; /* Título centrado para mejor composición en móviles */
+        margin-bottom: 1.8rem;
+    }
+
+    /* Ajustes táctiles específicos */
+    #form_login input, 
+    #form_login button {
+        height: 3.4rem; /* Ligeramente más grandes en móviles para evitar fallos al pulsar con el pulgar */
+        font-size: 1.05rem; /* Evita que iOS haga zoom automático molesto en los inputs */
+    }
+}
+
+/* Optimización extra para teléfonos extremadamente pequeños (como iPhone SE) */
+@media (max-width: 360px) {
+    #login_container_form {
+        width: 95%;
+        padding: 2rem 1.5rem;
+    }
+    #login_container_form h2 {
+        font-size: 1.8rem;
     }
 }
