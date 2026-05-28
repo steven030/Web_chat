@@ -34,24 +34,28 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; h
     color: white;
 }
 
-/* --- Área de Mensajes --- */
 #message {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Columna: lista arriba, input abajo */
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     overflow: hidden;
+    height: 100%; /* Asegura que ocupe todo el espacio padre */
 }
 
 #sub-message {
-    flex: 1;
-    background: #fdfdfd;
+    flex: 1; /* Esto hace que el área de mensajes crezca y ocupe todo el espacio sobrante */
+    overflow-y: auto; /* Solo esta parte tendrá scroll */
     padding: 2rem;
-    overflow-y: auto;
 }
 
+#input-container { 
+    padding: 1.5rem; 
+    border-top: 1px solid #edf2f7; 
+    flex-shrink: 0; /* Esto impide que el input se encoja o desaparezca */
+}
 #messages {
     list-style: none;
     display: flex;
