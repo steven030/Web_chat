@@ -1,13 +1,12 @@
 import os
 from io import BytesIO
-import base64  # Requerido para la conversión limpia a ImageKit
 from flask import Flask, request, render_template, url_for, session, redirect, flash
 from flask_socketio import SocketIO, send, join_room
 from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
 
-from config import Is_delovepment  
+from config import Is_delovepment  # Mantengo el nombre de tu archivo de configuración
 from model import User, db, CommentUser
 import forms
 
@@ -34,6 +33,7 @@ with app.app_context():
 # -------------------------
 @app.before_request
 def before_request():
+    # Sincronizado con 'loggout' (con doble 'g') para evitar el error 500 de Jinja/Werkzeug
     protected_endpoints = ['chat_user', 'profile', 'loggout', 'profile_update']
     guest_endpoints = ['login', 'register']
 
@@ -61,6 +61,7 @@ def register():
     register_form = forms.Register_user(request.form, request.files)
 
     if request.method == 'POST' and register_form.validate():
+        # Verificar si el usuario ya existe para evitar errores de duplicados
         existing_user = User.query.filter_by(username=register_form.username.data).first()
         if existing_user:
             flash("El nombre de usuario ya está registrado.")
@@ -79,16 +80,17 @@ def register():
 
             # --- PROCESAMIENTO Y VALIDACIÓN SEGURA DE IMAGEN ---
             try:
+                # 1. Validar la estructura de la imagen
                 img_validator = Image.open(BytesIO(image_bytes))
                 img_validator.verify()
                 
+                # 2. Reabrir el flujo limpio en memoria para la subida nativa
                 img_to_upload = Image.open(BytesIO(image_bytes))
                 output_buffer = BytesIO()
-                img_to_upload.save(output_buffer, format=img_to_upload.format)
-                output_buffer.seek(0)
                 
-                # Convertimos a Base64 string para una compatibilidad absoluta con ImageKit
-                base64_img = base64.b64encode(output_buffer.read()).decode('utf-8')
+                img_format = img_to_upload.format if img_to_upload.format else 'JPEG'
+                img_to_upload.save(output_buffer, format=img_format)
+                output_buffer.seek(0)
                 
             except Exception as e:
                 print(f"Error Pillow: {e}")
@@ -98,21 +100,35 @@ def register():
             # --- SUBIDA A IMAGEKIT ---
             try:
                 upload = imagekit.upload(
-                    file=base64_img,  # Enviamos el string codificado en Base64
+                    file=output_buffer,
                     file_name=filename,
                     options={"use_unique_file_name": False}
                 )
                 
-                if isinstance(upload, dict):
-                    user.image = upload.get("url") or upload.get("response", {}).get("url")
-                else:
-                    user.image = getattr(upload, "url", None)
+                url_oficial = None
 
-                if not user.image:
-                    raise ValueError("La respuesta de ImageKit no contiene una URL válida.")
+                # Caso A: Si el SDK devolvió su objeto nativo con metadatos
+                if hasattr(upload, "response_metadata"):
+                    raw_data = getattr(upload.response_metadata, "raw", {})
+                    url_oficial = raw_data.get("url")
+
+                # Caso B: Si devolvió un diccionario plano directamente
+                if not url_oficial and isinstance(upload, dict):
+                    url_oficial = upload.get("url") or upload.get("response", {}).get("url")
+
+                # Caso C: Extracción directa de respaldo
+                if not url_oficial:
+                    url_oficial = getattr(upload, "url", None)
+
+                if url_oficial:
+                    user.image = url_oficial
+                    print(f"Subida de registro exitosa: {user.image}")
+                else:
+                    raise ValueError("No se pudo extraer la URL del componente ImageKit.")
 
             except Exception as e:
                 print(f"Error de ImageKit API: {e}")
+                # Fallback manual de emergencia
                 endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT", "").rstrip('/')
                 user.image = f"{endpoint}/{filename}"
         else:
@@ -152,7 +168,7 @@ def login():
 # -------------------------
 # LOGOUT
 # -------------------------
-@app.route('/loggout')  
+@app.route('/loggout')  # Mantiene las dos 'g' requeridas por tu archivo HTML
 def loggout():
     session.clear()
     return redirect(url_for('index'))
@@ -212,112 +228,3 @@ def profile_update():
         update_form = forms.Profile_updte(request.form, request.files)
     else:
         update_form = forms.Profile_updte(obj=user)
-
-    if request.method == 'POST' and update_form.validate():
-        new_username = update_form.username.data
-
-        if new_username != user.username:
-            username_check = User.query.filter_by(username=new_username).first()
-            if username_check:
-                flash("Ese nombre de usuario ya está tomado.")
-                return render_template('profile_updat.html', form=update_form)
-
-        user.username = new_username
-        image_file = request.files.get('imagen')
-
-        if image_file and image_file.filename:
-            filename = secure_filename(f"{new_username}_{image_file.filename}")
-            image_bytes = image_file.read()
-
-            # --- PROCESAMIENTO Y VALIDACIÓN SEGURA DE IMAGEN ---
-            try:
-                img_validator = Image.open(BytesIO(image_bytes))
-                img_validator.verify()
-                
-                img_to_upload = Image.open(BytesIO(image_bytes))
-                output_buffer = BytesIO()
-                img_to_upload.save(output_buffer, format=img_to_upload.format)
-                output_buffer.seek(0)
-                
-                # Convertimos a Base64 string para el update
-                base64_img = base64.b64encode(output_buffer.read()).decode('utf-8')
-            except Exception as e:
-                print(f"Error Pillow en update: {e}")
-                flash("Imagen inválida o corrupto.")
-                return redirect(url_for('profile_update'))
-
-            # --- SUBIDA A IMAGEKIT ---
-            try:
-                upload = imagekit.upload(
-                    file=base64_img,  # Enviamos el string codificado en Base64
-                    file_name=filename,
-                    options={"use_unique_file_name": False}
-                )
-                
-                if isinstance(upload, dict):
-                    user.image = upload.get("url") or upload.get("response", {}).get("url")
-                else:
-                    user.image = getattr(upload, "url", None)
-
-                if not user.image:
-                    raise ValueError("La respuesta de ImageKit no contiene una URL válida.")
-
-            except Exception as e:
-                print(f"Error de ImageKit API en update: {e}")
-                endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT", "").rstrip('/')
-                user.image = f"{endpoint}/{filename}"
-
-        db.session.commit()
-
-        # Actualizar datos de la sesión activa
-        session['username'] = user.username
-        session['user_img'] = user.image
-
-        flash("Perfil actualizado correctamente.")
-        return redirect(url_for('profile'))
-
-    return render_template('profile_updat.html', form=update_form)
-
-
-# -------------------------
-# SOCKET IO
-# -------------------------
-@socketio.on('message')
-def handle_messages(msg):
-    if msg and msg.strip():
-        username = session.get('username')
-        image = session.get('user_img')
-
-        user = User.query.filter_by(username=username).first()
-
-        if user:
-            comment = CommentUser(
-                user_id=user.id,
-                text=msg.strip()
-            )
-
-            db.session.add(comment)
-            db.session.commit()
-
-            send({
-                'username': username,
-                'message': msg.strip(),
-                'img': image,  # Enviamos la URL absoluta directa de ImageKit
-                'alert': 'false'
-            }, broadcast=True)
-
-
-@socketio.on('connect')
-def connect_user():
-    if 'username' not in session:
-        return False
-
-    send({
-        'username': session['username'],
-        'message': ' has joined the chat.',
-        'alert': 'true'
-    }, broadcast=True)
-
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
