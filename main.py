@@ -68,8 +68,12 @@ def register():
                     raise Exception("La API no devolvió una URL válida.")
                     
             except Exception as e:
-                print(f"Error en subida: {e}")
-                user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
+                # Esto imprimirá el error real en los logs de Render
+                print(f"--- ERROR DETALLADO DE IMAGEKIT ---")
+                print(e)
+                print(f"Tipo de error: {type(e)}")
+                flash(f"Error al subir: {str(e)}") 
+                return render_template('profile_updat.html', form=update_form)
         else:
             user.image = "https://ik.imagekit.io/wannab1/DEFAULT.png"
 
@@ -133,8 +137,11 @@ def profile_update():
                     raise Exception("La API devolvió un resultado sin URL.")
 
             except Exception as e:
-                print(f"Error en update: {e}")
-                flash("Error al subir la imagen a ImageKit.")
+                # Esto imprimirá el error real en los logs de Render
+                print(f"--- ERROR DETALLADO DE IMAGEKIT ---")
+                print(e)
+                print(f"Tipo de error: {type(e)}")
+                flash(f"Error al subir: {str(e)}") 
                 return render_template('profile_updat.html', form=update_form)
 
         db.session.commit()
