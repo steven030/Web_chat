@@ -1,17 +1,18 @@
 // chat_style.js
 
-// Definimos el usuario logueado leyendo la variable global expuesta en el HTML
+// 1. Definimos el usuario logueado de forma segura
 window.currentUser = window.currentUser || "";
 
-// Función utilitaria para forzar el scroll al fondo del contenedor
+// 2. Función utilitaria para forzar el scroll al fondo del contenedor
 window.scrollDiv = () => {
     const div = document.getElementById('sub-message');
     if (div) {
-        div.scrollTop = div.scrollHeight; // Baja matemáticamente al último pixel
+        div.scrollTop = div.scrollHeight; // Baja matemáticamente al último píxel
     }
 };
 
-// Asegurar que el scroll se ejecute al cargar la ventana por completo
-window.onload = () => {
+// 3. REGISTRO SEGURO DEL SCROLL (Sin pisar otros scripts)
+// Usamos un EventListener nativo para que se ejecute en paralelo sin bloquear los sockets
+window.addEventListener('load', () => {
     window.scrollDiv();
-};
+});
