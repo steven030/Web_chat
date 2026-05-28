@@ -4,6 +4,26 @@
 {% from 'macro.html' import renderform %}
 
 <div id="chat-page-wrapper">
+    <div id="contact-list">
+    <h3>Usuarios conectados</h3>
+    <ul>
+        {% for user in all_users %}
+            <li class="user-item" onclick="selectUser('{{ user.id }}', '{{ user.username }}')">
+                {{ user.username }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    let currentReceiverId = null;
+
+    function selectUser(userId, username) {
+        currentReceiverId = userId;
+        document.getElementById('messages').innerHTML = ""; // Limpiar chat actual
+        alert("Ahora hablando con: " + username);
+    }
+</script>
     <div id="message">
         
         <div id="sub-message">
