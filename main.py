@@ -267,7 +267,6 @@ def profile_update():
 				    file=images.read(),
 				    file_name=filename
 				)
-				
 				user.image = upload.response_metadata.raw["url"]
 				session['user_img'] = user.image
             else:
