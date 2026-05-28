@@ -1,4 +1,4 @@
-#library from python3
+# library from python3
 from flask import request, render_template, url_for, Flask, session, redirect, send_from_directory
 from flask_socketio import SocketIO, send, join_room, leave_room
 import socketio
@@ -7,109 +7,99 @@ from PIL import Image
 from werkzeug.utils import secure_filename
 import os
 from os import remove
-from werkzeug.utils import secure_filename
 from imagekitio import ImageKit
 
-
-#file .py inside proyect
+# file .py inside project
 from config import Is_delovepment
 from model import User, db, CommentUser
 import forms
 
- #list of users
+# list of users
 list_users = []
 commentList = []
 sendm = False
 
-#app flask
+# app flask
 app = Flask(__name__)
 app.config.from_object(Is_delovepment)
+
 imagekit = ImageKit(
     public_key=os.getenv("IMAGEKIT_PUBLIC_KEY"),
     private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"),
     url_endpoint=os.getenv("IMAGEKIT_URL_ENDPOINT")
 )
+
 socketio = SocketIO(
     app,
     async_mode='threading'
 )
+
 print(os.getenv("DATABASE_URL"))
+
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
 
-
 @app.before_request
 def before_request():
-	if 'username' not in session and request.endpoint in ['chat_user','profile','loggout','profile_update']:
-		return redirect(url_for('index'))
-	elif 'username' in session and request.endpoint in ['login','register']:
-		return redirect(url_for('index'))
+    if 'username' not in session and request.endpoint in ['chat_user', 'profile', 'loggout', 'profile_update']:
+        return redirect(url_for('index'))
+    elif 'username' in session and request.endpoint in ['login', 'register']:
+        return redirect(url_for('index'))
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	title = 'Hi!'
+    title = 'Hi!'
 
-	if 'username' in session:
-		username = session['username']
+    if 'username' in session:
+        username = session['username']
+    else:
+        username = None
+
+    return render_template('index.html', title=title, username=username)
 
 
-										
-	else: 
-
-		username = None
-
-	return render_template('index.html', title = title, username = username)
-
-@app.route('/register', methods=['GET','POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-	title = 'LOAD CODE'
+    title = 'LOAD CODE'
+    register_form = forms.Register_user(request.form)
 
-	register_form = forms.Register_user(request.form)
+    if request.method == 'POST' and register_form.validate():
 
-	if request.method == 'POST' and register_form.validate():
+        user = User(register_form.username.data,
+                    register_form.password.data)
 
-		user = User(register_form.username.data,
-			        register_form.password.data)
-		if request.files:
-		
-			images = request.files.get('imagen')
-			
-			if images:
-			
-			    filename = secure_filename(
-			        register_form.username.data + "_" + images.filename
-			    )
-			
-			    upload = imagekit.upload_file(
-			        file=images.read(),
-			        file_name=filename
-			    )
-			
-			    user.image = upload.response_metadata.raw["url"]
-			
-			else:
-			    user.image = "https://ik.imagekit.io/wannab1/default.png"
+        if request.files:
+            images = request.files.get('imagen')
 
-		
-		
-		 
+            if images:
+                filename = secure_filename(
+                    register_form.username.data + "_" + images.filename
+                )
 
-		db.session.add(user)
-		db.session.commit()
+                upload = imagekit.upload_file(
+                    file=images.read(),
+                    file_name=filename
+                )
 
-		
+                user.image = upload.response_metadata.raw["url"]
 
-		return redirect(url_for('index'))
+            else:
+                user.image = "https://ik.imagekit.io/wannab1/default.png"
 
+        db.session.add(user)
+        db.session.commit()
 
+        return redirect(url_for('index'))
 
-	return render_template('register.html', title = title, form = register_form)
+    return render_template('register.html', title=title, form=register_form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     title = 'Hi!'
     login_form = forms.Login_user(request.form)
 
@@ -126,218 +116,192 @@ def login():
             session['user_img'] = user.image
 
             flash('Login successful')
-
             return redirect(url_for('index'))
 
         else:
             flash('Username or password incorrect')
 
-    return render_template(
-        'login.html',
-        form=login_form,
-        title=title
-    )
+    return render_template('login.html', form=login_form, title=title)
+
 
 @app.route('/loggout')
 def loggout():
-	if 'username' in session:
-		session.pop('username')
-		session.pop('user_id')
-		session.pop('user_img')
+    if 'username' in session:
+        session.pop('username')
+        session.pop('user_id')
+        session.pop('user_img')
 
-		# session['username'] = None
-		# session['user_id'] = None
-		# session['user_img'] = None
+    return redirect(url_for('index'))
 
 
-	return redirect(url_for('index'))
+@app.route('/chat_user', methods=['POST', 'GET'])
+@app.route('/chat_user/<int:page>', methods=['POST', 'GET'])
+def chat_user(page=1, name=''):
+
+    title = 'Hi!'
+    longitud = 0
+
+    per_page = 20
+    form_chat = forms.Chat_post(request.form)
+
+    if 'username' in session:
+
+        username = session['username']
+        img = session['user_img']
+        user_id = session['user_id']
+
+        session['reply'] = name
+
+        longitud = CommentUser.query.count()
+        page = int(max(longitud / 20, 1))
+
+        commentList = CommentUser.query.join(User).add_columns(
+            User.username,
+            User.image,
+            CommentUser.text
+        ).paginate(
+            page=page,
+            per_page=per_page,
+            error_out=False
+        )
+
+    else:
+        username = None
+        img = None
+        commentList = None
+
+    return render_template(
+        'Chat__user.html',
+        title=title,
+        page=page,
+        log=longitud,
+        username=username,
+        history=commentList,
+        img=img,
+        form=form_chat
+    )
 
 
-
-
-
-@app.route('/chat_user', methods=['POST','GET'])
-@app.route('/chat_user/<int:page>', methods=['POST','GET'])
-
-def chat_user(page = 1, name = ''):
-
-	
-	title = 'Hi!'
-	_sid = ''
-	longitud = 0
-	
-	per_page = 20
-
-	form_chat = forms.Chat_post(request.form)
-	if 'username' in session:
-
-		
-		
-		#cookies of user
-		username = session['username']
-		img = session['user_img']
-		
-		user_id = session['user_id']
-		session['reply'] = name
-	
-		
-		#chat history for users
-		longitud = CommentUser.query.count()
-		page = int(longitud/20)
-		commentList = CommentUser.query.join(User).add_columns(
-			User.username,
-			User.image,
-			CommentUser.text
-		).paginate(
-			page=page,
-			per_page=longitud,
-			error_out=False
-		)
-
-		print(longitud, '<<<<< Aqui')
-		# if commentList:
-		# 	longitud = len(commentList.items)
-			
-		# 	commentList = CommentUser.query.join(User).add_columns(User.username, User.image, CommentUser.text).paginate(page,longitud,False)
-
-		
-
-		
-			
-	else:
-		username = None
-		img = None
-
-	return render_template('Chat__user.html', title = title, page = page, log = longitud, username = username, history = commentList, img = img ,form = form_chat)
-
-
-
-
-
-@app.route('/profile', methods=['GET','POST'])
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-	img_user = ' '
-	title = 'Hi!'
+    title = 'Hi!'
+    img_user = ''
+    username = None
 
-	username = None
-	if 'username' in session:
+    if 'username' in session:
+        username = session['username']
+        img_user = session['user_img']
+    else:
+        return redirect(url_for('index'))
 
-		username = session['username']
-
-		img_user =session['user_img']
-
-		
-
-		
-
+    return render_template(
+        'profile_user.html',
+        title=title,
+        url_img=img_user,
+        username=username
+    )
 
 
-	else:
-		return redirect(url_for('index'))
-
-	return render_template('profile_user.html', title=title, url_img = img_user, username = username)
-
-@app.route('/profile_update', methods=['POST','GET'])
+@app.route('/profile_update', methods=['POST', 'GET'])
 def profile_update():
     title = 'Hi!'
     update_form = forms.Profile_updte(request.form)
 
-    if 'username' in session:
-        user = User.query.filter_by(username=session['username']).first()
-        
-        if request.method == 'POST' and update_form.validate():
-            path = app.config['IMAGES_UPLOADS'] + '/' + session['user_img']
-
-            # 1. USAR .get() EN LUGAR DE CORCHETES
-            images = request.files.get('imagen') 
-
-            # 2. Verificar que el archivo exista y tenga un nombre real
-            if images and images.filename != '':
-                if os.path.isfile(path):
-                    try:
-                        remove(path)
-                    except Exception as e:
-                        print(f"No se pudo borrar la imagen anterior: {e}")
-
-                # Limpiar y asegurar el nombre del archivo
-                filename = secure_filename(update_form.username.data + "_" + images.filename)
-                path = os.path.join(app.config['IMAGES_UPLOADS'], filename)
-				
-                upload = imagekit.upload_file(
-				    file=images.read(),
-				    file_name=filename
-				)
-				user.image = upload.response_metadata.raw["url"]
-				session['user_img'] = user.image
-            else:
-                # Si no subió una imagen nueva, conservar la que ya tenía en la sesión
-                filename = session['user_img']
-
-            # Actualizar la Base de Datos
-            db.session.query(User).filter(User.id == session['user_id']).update({
-                User.username: update_form.username.data,
-                User.image: filename
-            })
-            db.session.commit()
-
-            session['username'] = update_form.username.data
-            return redirect(url_for('profile'))
-
-    else:
+    if 'username' not in session:
         return redirect(url_for('index'))
 
+    user = User.query.filter_by(username=session['username']).first()
+
+    if request.method == 'POST' and update_form.validate():
+
+        images = request.files.get('imagen')
+
+        if images and images.filename != '':
+
+            filename = secure_filename(
+                update_form.username.data + "_" + images.filename
+            )
+
+            upload = imagekit.upload_file(
+                file=images.read(),
+                file_name=filename
+            )
+
+            user.image = upload.response_metadata.raw["url"]
+            session['user_img'] = user.image
+
+        else:
+            filename = session['user_img']
+
+        db.session.query(User).filter(User.id == session['user_id']).update({
+            User.username: update_form.username.data,
+            User.image: user.image if images else session['user_img']
+        })
+
+        db.session.commit()
+
+        session['username'] = update_form.username.data
+
+        return redirect(url_for('profile'))
+
     return render_template('profile_updat.html', title=title, form=update_form)
+
 
 @socketio.on('message')
 def handle_messages(msg):
 
-	if(msg != None or msg != " "):
-		sendm = True
-		username = session['username']
-		image = session['user_img']
+    if msg is not None and msg != " ":
 
-		print('message:' + msg)
-		
+        username = session['username']
+        image = session['user_img']
 
-		user = User.query.filter_by(username = username).first()
-		if user is not None:
-			session['user_id'] = user.id
-			user_id = session['user_id']
-			comment1 = CommentUser(user_id = user_id , text = msg)
+        user = User.query.filter_by(username=username).first()
 
-			reply = session['reply']
-			db.session.add(comment1)
-			db.session.commit()
-			msg = {'username':session['username'],'message':msg, 'img':image, 'alert':'false'}
-			print('\n \n {} \n \n'.format(msg))
-			
-			send(msg,broadcast=True)
-	else:
-		return false
+        if user is not None:
+            session['user_id'] = user.id
+
+            comment1 = CommentUser(
+                user_id=session['user_id'],
+                text=msg
+            )
+
+            db.session.add(comment1)
+            db.session.commit()
+
+            msg = {
+                'username': username,
+                'message': msg,
+                'img': image,
+                'alert': 'false'
+            }
+
+            send(msg, broadcast=True)
+
+    else:
+        return False
 
 
 @socketio.on('connect')
 def connect_user():
- 
-	
-	username = session['username']
-	img = session['user_img']
-	# list_users.append(request.sid)
-	# print(list_users)
-	room = 0;
-	join_room(room)
-	
-	
-	send({'username':username,'message':' has join the chat.','alert':'true'})
+
+    username = session['username']
+    img = session['user_img']
+
+    room = 0
+    join_room(room)
+
+    send({
+        'username': username,
+        'message': ' has join the chat.',
+        'alert': 'true'
+    })
+
 
 @socketio.on('username', namespace='/chat_user')
 def resive_username(username):
-	list_users = [{username:request.sid}]
+    list_users = [{username: request.sid}]
+    print(list_users)
 
-	print(list_users)
-
-
-		
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
