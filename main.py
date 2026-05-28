@@ -29,24 +29,20 @@ with app.app_context():
 def before_request():
     protected_endpoints = ['chat_user', 'profile', 'loggout', 'profile_update']
     guest_endpoints = ['login', 'register']
-
     if 'username' not in session and request.endpoint in protected_endpoints:
         return redirect(url_for('index'))
-
     if 'username' in session and request.endpoint in guest_endpoints:
         return redirect(url_for('index'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    username = session.get('username')
-    return render_template('index.html', title='Hi!', username=username)
+    return render_template('index.html', title='Hi!', username=session.get('username'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     register_form = forms.Register_user(request.form, request.files)
     if request.method == 'POST' and register_form.validate():
-        existing_user = User.query.filter_by(username=register_form.username.data).first()
-        if existing_user:
+        if User.query.filter_by(username=register_form.username.data).first():
             flash("El nombre de usuario ya está registrado.")
             return render_template('register.html', form=register_form)
 
@@ -55,25 +51,22 @@ def register():
 
         if image_file and image_file.filename:
             filename = secure_filename(f"{register_form.username.data}_{image_file.filename}")
-            image_bytes = image_file.read()
             try:
-                img_to_upload = Image.open(BytesIO(image_bytes))
-                output_buffer = BytesIO()
-                img_format = img_to_upload.format if img_to_upload.format else 'JPEG'
-                img_to_upload.save(output_buffer, format=img_format)
-                output_buffer.seek(0)
+                img_data = Image.open(BytesIO(image_file.read()))
+                buffer = BytesIO()
+                img_data.save(buffer, format=img_data.format or 'JPEG')
+                buffer.seek(0)
                 
-                upload = imagekit.upload(file=output_buffer, file_name=filename, options={"use_unique_file_name": False})
+                upload = imagekit.upload(file=buffer, file_name=filename, options={"use_unique_file_name": False})
                 
-                url_oficial = None
+                # Acceso seguro a la URL
                 if hasattr(upload, "response_metadata"):
-                    url_oficial = getattr(upload.response_metadata, "raw", {}).get("url")
-                if not url_oficial and isinstance(upload, dict):
-                    url_oficial = upload.get("url") or upload.get("response", {}).get("url")
-                
-                user.image = url_oficial if url_oficial else f"{os.getenv('IMAGEKIT_URL_ENDPOINT').rstrip('/')}/{filename}"
+                    user.image = getattr(upload.response_metadata, "raw", {}).get("url")
+                else:
+                    user.image = getattr(upload, "url", None)
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error en subida: {e}")
+                user.image = "https://ik.imagekit.io/wannab1/default.png"
         else:
             user.image = "https://ik.imagekit.io/wannab1/default.png"
 
@@ -100,10 +93,8 @@ def loggout():
 
 @app.route('/chat_user', methods=['GET', 'POST'])
 def chat_user():
-    form_chat = forms.Chat_post(request.form)
-    page = request.args.get('page', 1, type=int)
-    commentList = CommentUser.query.join(User).add_columns(User.username, User.image, CommentUser.text).paginate(page=page, per_page=20, error_out=False)
-    return render_template('Chat__user.html', username=session.get('username'), img=session.get('user_img'), history=commentList, form=form_chat)
+    commentList = CommentUser.query.join(User).add_columns(User.username, User.image, CommentUser.text).paginate(page=request.args.get('page', 1, type=int), per_page=20, error_out=False)
+    return render_template('Chat__user.html', username=session.get('username'), img=session.get('user_img'), history=commentList, form=forms.Chat_post(request.form))
 
 @app.route('/profile')
 def profile():
@@ -117,19 +108,35 @@ def profile_update():
     if request.method == 'POST' and update_form.validate():
         user.username = update_form.username.data
         image_file = request.files.get('imagen')
-
         if image_file and image_file.filename:
             filename = secure_filename(f"{user.username}_{image_file.filename}")
             try:
-                img_to_upload = Image.open(BytesIO(image_file.read()))
-                output_buffer = BytesIO()
-                img_to_upload.save(output_buffer, format=img_to_upload.format or 'JPEG')
-                output_buffer.seek(0)
-                
-                upload = imagekit.upload(file=output_buffer, file_name=filename, options={"use_unique_file_name": False})
-                
-                url_oficial = None
+                img_data = Image.open(BytesIO(image_file.read()))
+                buffer = BytesIO()
+                img_data.save(buffer, format=img_data.format or 'JPEG')
+                buffer.seek(0)
+                upload = imagekit.upload(file=buffer, file_name=filename, options={"use_unique_file_name": False})
                 if hasattr(upload, "response_metadata"):
-                    url_oficial = getattr(upload.response_metadata, "raw", {}).get("url")
-                if not url_oficial and isinstance(upload, dict):
-                    url_oficial = upload.get
+                    user.image = getattr(upload.response_metadata, "raw", {}).get("url")
+                else:
+                    user.image = getattr(upload, "url", None)
+            except Exception as e:
+                print(f"Error en update: {e}")
+        
+        db.session.commit()
+        session['username'] = user.username
+        session['user_img'] = user.image
+        return redirect(url_for('profile'))
+    return render_template('profile_updat.html', form=update_form)
+
+@socketio.on('message')
+def handle_messages(msg):
+    if msg and msg.strip():
+        user = User.query.filter_by(username=session.get('username')).first()
+        if user:
+            db.session.add(CommentUser(user_id=user.id, text=msg.strip()))
+            db.session.commit()
+            send({'username': session['username'], 'message': msg.strip(), 'img': session['user_img'], 'alert': 'false'}, broadcast=True)
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)
