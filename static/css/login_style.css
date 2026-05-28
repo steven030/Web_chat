@@ -5,19 +5,20 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #f4f6f9; /* Fondo claro sutil para resaltar el formulario en móviles */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f4f6f9;
     overflow-x: hidden;
     height: 100vh;
 }
 
 /* ==========================================
-   CONTENEDOR PRINCIPAL 
+   CONTENEDOR PRINCIPAL
    ========================================== */
 #login_container {
     width: 100%;
     height: 100vh;
     display: flex;
+    flex-direction: row; /* En escritorio van de lado a lado */
     background-image: url("../source/images/login_form_img.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -37,7 +38,6 @@ body {
     align-items: center;
     padding: 2.5rem;
     z-index: 2;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #login_container_form form {
@@ -52,15 +52,15 @@ body {
     font-size: 2.4rem;
     font-weight: 700;
     margin-bottom: 2rem;
-    letter-spacing: -0.5px;
 }
 
-/* Contenedores de inputs (inyectados por tu macro) */
+/* Campos generados por macro Flask WTForms */
 #form_login .form_style, 
 #form_login div { 
     display: flex;
     flex-direction: column;
     margin-bottom: 1.2rem;
+    width: 100%;
 }
 
 #form_login label {
@@ -68,12 +68,13 @@ body {
     font-weight: 600;
     font-size: 0.95rem;
     margin-bottom: 0.6rem;
+    text-align: left;
 }
 
 #form_login input {
-    width: 100%;
-    height: 3.2rem; /* Altura ideal para pantallas táctiles (mínimo 48px recomendados por Google/Apple) */
-    border-radius: 12px; /* Bordes más redondeados y modernos */
+    width: 100% !important; /* Fuerza a que ocupe todo el ancho del contenedor */
+    height: 3.2rem;
+    border-radius: 12px;
     border: 2px solid transparent;
     padding: 0 1.2rem;
     font-size: 1rem;
@@ -82,21 +83,12 @@ body {
     transition: all 0.25s ease;
 }
 
-#form_login input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
 #form_login input:focus {
     outline: none;
     background-color: #ffffff;
     color: #222222;
-    border-color: #ffffff;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ==========================================
-   BOTÓN PREMIUM
-   ========================================== */
 #form_login button {
     width: 100%;
     height: 3.2rem;
@@ -109,7 +101,6 @@ body {
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    letter-spacing: 0.5px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
 }
@@ -117,69 +108,45 @@ body {
 #form_login button:hover {
     background: #f8fafc;
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-#form_login button:active {
-    transform: translateY(0);
-}
-
-/* Enlace inferior */
 #form_login a {
     text-decoration: none;
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.85);
     text-align: center;
-    transition: color 0.2s ease;
-    padding: 0.5rem;
-}
-
-#form_login a:hover {
-    color: #ffffff;
 }
 
 /* ==========================================
-   MÓVILES (PANTALLAS GRANDES Y PEQUEÑAS) 📱
+   VISTA MÓVIL FORZADA (MEDIA QUERY) 📱
    ========================================== */
 @media (max-width: 850px) {
     #login_container {
-        /* En móviles usamos un fondo con gradiente general suave */
-        background-image: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%);
+        /* IMPORTANTE: Cambia a diseño vertical y pisa la imagen de fondo trasera */
+        flex-direction: column;
+        background-image: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%) !important;
         justify-content: center;
         align-items: center;
+        padding: 1rem;
     }
 
     #login_container_form {
-        width: 90%; /* Ya no ocupa toda la pantalla de forma tosca, se vuelve una tarjeta elegante */
-        height: auto;
-        max-height: 92vh;
-        border-radius: 24px; /* Tarjeta curva premium estilo App moderna */
+        /* La tarjeta ahora toma el control del centro de la pantalla */
+        width: 100% !important;
+        max-width: 400px;
+        height: auto !important;
+        border-radius: 24px;
         padding: 3rem 2rem;
-        box-shadow: 0 15px 35px rgba(14, 34, 54, 0.25);
-        overflow-y: auto; /* Asegura scroll interno si el teléfono es muy pequeño */
+        box-shadow: 0 15px 35px rgba(14, 34, 54, 0.2);
     }
 
     #login_container_form h2 {
         font-size: 2.1rem;
-        text-align: center; /* Título centrado para mejor composición en móviles */
-        margin-bottom: 1.8rem;
+        text-align: center;
     }
 
-    /* Ajustes táctiles específicos */
     #form_login input, 
     #form_login button {
-        height: 3.4rem; /* Ligeramente más grandes en móviles para evitar fallos al pulsar con el pulgar */
-        font-size: 1.05rem; /* Evita que iOS haga zoom automático molesto en los inputs */
-    }
-}
-
-/* Optimización extra para teléfonos extremadamente pequeños (como iPhone SE) */
-@media (max-width: 360px) {
-    #login_container_form {
-        width: 95%;
-        padding: 2rem 1.5rem;
-    }
-    #login_container_form h2 {
-        font-size: 1.8rem;
+        height: 3.4rem; /* Más cómodo para pulsaciones táctiles */
     }
 }
