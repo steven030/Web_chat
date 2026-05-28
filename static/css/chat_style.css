@@ -1,212 +1,180 @@
-*{
-	margin: 0;
-	padding: 0;
-}
-.non-selectable {
-   -moz-user-select: none; 
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none; 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-::-webkit-scrollbar {display: none;}
-body{
-	overflow: hidden;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #f4f6f9;
+    overflow: hidden; /* Evita scroll doble en la ventana completa */
 }
 
-#content-header{
-	border-bottom: 1px solid #e9e9e9;
+/* Contenedor maestro del chat */
+#chat-page-wrapper {
+    width: 100%;
+    height: calc(100vh - 70px); /* Altura exacta restante debajo del nav */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
 }
 
-#logo-title{
-	margin: 0.5rem;
-	padding: 0.5rem;
-	font-size: 2rem;
-}
-#logo-title a{
-	font-style: none;
-	text-decoration: none;
-	color: black;
-
-}
-
-
-#message{
-	
-
-	width: 100vw;
-	height: 90vh;
-
-
-
-}
-#sub-message{
-	background-Color: #dadbdb;
+#message {
+    width: 100%;
+    max-width: 900px; /* Evita que el chat se estire horriblemente en pantallas gigantes */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
-#sub-message{
-	margin: 1.6rem 12.5% 0rem 0rem;
-
-	margin-bottom: 0;
-	padding: 0.5rem;
-	justify-content: center;
-	box-sizing: border-box;
-	float: right;
-	height:81%;
-	width: 75%;
-
-	overflow-y: scroll;
-	overflow-x: hidden;
-	scrollbar-width: none;
-	border: 1px solid black;
-
-}
-#input-container{
-	width: 100%;
-	margin: 0.5rem;
-	float: right;
-	justify-content: center;
-	text-align: center;
-
-
-
+/* ==========================================
+   CONTENEDOR DE MENSAJES (SCROLLABLE)
+   ========================================== */
+#sub-message {
+    flex: 1; /* Toma todo el espacio disponible empujando el input al fondo */
+    background-color: #f8fafc;
+    padding: 1.5rem;
+    overflow-y: auto; /* Scroll vertical limpio nativo */
+    overflow-x: hidden;
 }
 
-#input-container input{
-	float: right;
-	margin: 0.5rem 11.9% 0rem 0rem;
-	padding-left: 10px;
-	font-size: 1rem;
-	border-radius: 15px;
-	box-shadow: 0px 0px 3px #66bad1;
-	border: none;
-	width: 74.5%;
-	height: 3rem;
-	float: right;
-
+/* Ocultar barra de scroll para navegadores basados en Webkit de forma limpia */
+#sub-message::-webkit-scrollbar {
+    width: 6px;
 }
-#input-container input:focus{
-	box-shadow: 0px 0px 3px #993487;
-	border-color: #993487;
-	outline: 0 none;
-	border: none;
+#sub-message::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
 }
 
-
-li{
-	font-style: none;
-	list-style: none;
+#messages {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
-/*this is the style of nav*/
-#content-header{
-	display: flex;
-	align-items: center;
-}
-#content-header ul{
-	margin-left: auto;
-	float: right;
-}
-#content-header h2, li{
-	margin: 0.5rem;
-	padding-right: 0.5rem;
-	float: left;
-}
-#content-header li a{
-	color: black;
-	text-decoration: none;
-	transition-duration: .5s;
-	font-size: 1.1rem;
-}
-#content-header li a:hover{
-
-	color: #0398;
-	font-size: 1rem;
-
-}
-/*end style of nav*/
-#content-notify{
-	align-items: center;
-	justify-content: center;
-	height: 3.7rem;
-	width: 100%;
-	box-sizing: border-box;
-	/*text-align: justify;*/
-
-	margin: 1rem;
-
-}
-#notify{
-	width: 16rem;
-	height:2rem;
-	margin: auto;
-	padding: 1rem;
-
-	
-
-	text-align: center;
-	background-color: #dee9ec;
-	font-size: 0.8rem;
-	color: #464646;
-}
-.chat-main{
-	margin: 0.8rem;
-	padding: 3.5rem;
-	justify-content: center;
-	display: block;
-}
-.chat-main img{
-	margin-right: 0.5rem;
-	padding-left: 0.5rem;
-	position: relative;
-
-	width: 3rem;
-	height: 3rem;
-	border-radius: 100%;
-	float: left;
-	
+/* ESTRUCTURA DE BURBUJA DE MENSAJE */
+.chat-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
 }
 
-.chat-box{
-
-	float: left;
-	background-color: #f1f2f2;
-
-	max-width: 20rem;
-	display: flex;
-	word-break: break-all;
-	padding: 1rem;
-
-	/*justify-content: center;*/
-	text-align: justify;
-	/*margin-right: 48%;*/
-	margin-bottom: 2rem;
-	border-radius: 0.5rem;
+.chat-avatar-wrapper {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #e2e8f0;
+    flex-shrink: 0; /* Impide que el avatar se aplaste si el texto es muy largo */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-#content{
-	margin: 0.02rem;
-}
-.chat-box p{
-	margin: 0.05rem;
-	padding: 0.05rem;
-	float: left;
-
-}
-#user{
-	margin: 0;
-	padding: 0.05rem;
+.chat-avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/*.chat-box-Joselito{
-	background-color: green;
-}*/
+.chat-content-body {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%; /* Límite elegante de ancho para las burbujas */
+}
 
-footer{
-	margin: 0.05rem;
-	width: 100vw;
-	height: 3rem;
-	text-align: center;
-	position: absolute;
-	bottom: 0;
+.chat-username {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 0.2rem;
+    padding-left: 0.2rem;
+}
+
+.chat-box {
+    background-color: #ffffff;
+    padding: 0.75rem 1rem;
+    border-radius: 4px 16px 16px 16px; /* Esquinas estilo chat moderno */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+    word-break: break-word; /* Rompe palabras largas automáticamente */
+}
+
+.chat-box p {
+    font-size: 0.95rem;
+    color: #1e293b;
+    line-height: 1.4;
+}
+
+/* Opcional: Estilo para notificaciones de "sistema" (ej: admin joined) */
+#content-notify {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+#notify {
+    background-color: #e2e8f0;
+    color: #475569;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ==========================================
+   CONTENEDOR DEL INPUT DE TEXTO (FIJO INFERIOR)
+   ========================================== */
+#input-container {
+    width: 100%;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+#input-container form {
+    width: 100%;
+}
+
+#input-container input {
+    width: 100%;
+    height: 3rem;
+    border-radius: 25px;
+    border: 1px solid #cbd5e1;
+    padding: 0 1.2rem;
+    font-size: 1rem;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+#input-container input:focus {
+    outline: none;
+    border-color: #4e67df;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(78, 103, 223, 0.15);
+}
+
+/* ==========================================
+   RESPONSIVO PARA CELULARES 📱
+   ========================================== */
+@media (max-width: 768px) {
+    #chat-page-wrapper {
+        padding: 0; /* Ocupa toda la pantalla del teléfono sin dejar bordes sueltos */
+        height: calc(100vh - 60px);
+    }
+    
+    #message {
+        border-radius: 0; /* Se adapta perfectamente como app nativa */
+    }
+    
+    .chat-content-body {
+        max-width: 85%; /* Más espacio horizontal para texto en pantallas angostas */
+    }
 }
