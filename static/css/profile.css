@@ -1,93 +1,124 @@
-*{
-	padding: 0;
-	margin: 0;
-}
-header{
-	background-color: white;
-}
-#container-all{
-	background-color: #fffdfd;
-	align-items: center;
-	padding: auto;
-}
-#profile-container{
-	width: 23rem;
-	height: 28em;
-	background-color: white;
-	margin: 4.5rem  0rem 0rem 35%;
-	justify-content: center;
-	text-align: center;
-	box-shadow: 0px 0px 4px 0.02px gray;
-
-}
-#user_img{
-	width: 8rem;
-	height: 8rem;
-	position: relative;
-	top: -50px;
-	border-radius: 50%;
-}
-#user_name{
-	font-size: 1.5rem;
-	position: relative;
-	top: -3.2rem;
-	
-}
-#nav-menu{
-	display: inline;
-
-}
-#nav-menu li{
-
-	margin: 0.8rem;
-	margin-left: 1.3rem;
-	width: 85%;
-	border-radius: 10px;
-	box-shadow: 0px 0px 4px 0.02px gray;
-	transition: background-color .5s;
-
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-#nav-menu{
-	width: 100%;
-	height: 100%;
-	margin-bottom: 2rem;
-
-
-
-}
-#nav-menu li a{
-	width: 100%;
-	height: 100%;
-	padding-top: 0.8rem;
-	padding-bottom: 0.8rem;
-  	display: inline-block;
-}
-#nav-menu li:hover{
-	box-shadow: 0px 0px 5px #0398;
-	border: none;
-	background-color: #f9f9f9;
-
-
-	color: white;
-}
-#nav-menu #logout:hover{
-	
-	background-color: #ed7272;
-	box-shadow: none;
-}
-#nav-menu #logout a:hover{
-	color: black;
+/* Contenedor padre para centrar la tarjeta perfectamente */
+#profile-main-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 70px); /* Ajusta al alto de la pantalla menos el nav */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f6f9;
+    padding: 2rem 1rem;
 }
 
-#nav-menu li a:hover{
-	color: #0398;
+/* Tarjeta de Perfil Estilizada */
+#profile-container {
+    width: 100%;
+    max-width: 380px; /* Tamaño perfecto y responsivo */
+    background-color: white;
+    border-radius: 24px;
+    padding: 3rem 2rem 2rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-
-#nav-menu ul li a{
-	text-decoration: none;
-	color: black;
+/* Contenedor del Avatar para controlar desbordamientos */
+.avatar-container {
+    width: 8.5rem;
+    height: 8.5rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+#user_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Evita que la foto de ImageKit se deforme */
+}
 
+#user_name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 2rem;
+    text-transform: capitalize;
+}
+
+/* Menú de Opciones */
+#nav-menu {
+    width: 100%;
+}
+
+#nav-menu ul {
+    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Espaciado uniforme sin usar BR */
+}
+
+#nav-menu li {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid #edf2f7;
+    transition: all 0.3s ease;
+}
+
+#nav-menu li a {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    text-decoration: none;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    transition: color 0.2s;
+}
+
+/* Efectos Hover Dinámicos */
+#nav-menu li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(78, 103, 223, 0.15);
+    background-color: #f8fafc;
+    border-color: #7083e4;
+}
+
+#nav-menu li:hover a {
+    color: #4e67df;
+}
+
+/* Botón Especial de Logout */
+#nav-menu #logout {
+    margin-top: 0.5rem;
+    border-color: #fed7d7;
+}
+
+#nav-menu #logout a {
+    color: #e53e3e;
+}
+
+#nav-menu #logout:hover {
+    background-color: #fff5f5;
+    border-color: #feb2b2;
+    box-shadow: 0 6px 12px rgba(229, 62, 62, 0.1);
+}
+
+#nav-menu #logout:hover a {
+    color: #c53030;
+}
