@@ -63,3 +63,15 @@ $(document).ready(function() {
         }
     });
 });
+
+function toggleUsers() {
+    const list = document.getElementById('contact-list');
+    
+    // Si no tiene estilo o está oculto, lo mostramos
+    if (list.style.display === 'none' || list.style.display === '') {
+        list.style.display = 'block';
+    } else {
+        // Si está visible, lo ocultamos
+        list.style.display = 'none';
+    }
+}
