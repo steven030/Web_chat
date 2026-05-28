@@ -87,7 +87,7 @@ def register():
                         file=image_bytes, # Pasamos la variable con los bytes
                         file_name=filename
                     )
-                    user.image = upload.response_metadata.raw["url"]
+                    user.image = upload.url
                 except TypeError as e:
                     if "description" in str(e):
                         endpoint = os.getenv("IMAGEKIT_URL_ENDPOINT").rstrip('/')
@@ -234,7 +234,7 @@ def profile_update():
                     file=images.read(),
                     file_name=filename
                 )
-                user.image = upload.response_metadata.raw["url"]
+                user.image = upload.url
 
             except TypeError as e:
                 if "description" in str(e):
