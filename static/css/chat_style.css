@@ -1,8 +1,7 @@
-/* Limpieza inicial */
+/* --- Limpieza y Base --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: sans-serif; background-color: #f4f6f9; height: 100vh; overflow: hidden; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; height: 100vh; overflow: hidden; }
 
-/* Contenedor principal: Flexbox para alinear lista y chat */
 #chat-page-wrapper {
     display: flex;
     height: calc(100vh - 70px);
@@ -10,26 +9,25 @@ body { font-family: sans-serif; background-color: #f4f6f9; height: 100vh; overfl
     gap: 1rem;
 }
 
-/* ==========================================
-   BARRA LATERAL (LISTA DE USUARIOS)
-   ========================================== */
+/* --- Barra Lateral --- */
 #contact-list {
-    width: 250px;
+    width: 280px;
     background: #ffffff;
     border-radius: 20px;
-    padding: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     overflow-y: auto;
 }
 
 .user-item {
-    padding: 0.8rem;
-    margin-bottom: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
     background: #f8fafc;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     list-style: none;
-    transition: 0.2s;
+    transition: all 0.2s ease;
+    border: 1px solid #edf2f7;
 }
 
 .user-item:hover, .user-item.active {
@@ -37,23 +35,21 @@ body { font-family: sans-serif; background-color: #f4f6f9; height: 100vh; overfl
     color: white;
 }
 
-/* ==========================================
-   ÁREA DEL CHAT
-   ========================================== */
+/* --- Área del Chat --- */
 #message {
     flex: 1;
     display: flex;
     flex-direction: column;
     background: #ffffff;
     border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     overflow: hidden;
 }
 
 #sub-message {
     flex: 1;
-    background: #f8fafc;
-    padding: 1.5rem;
+    background: #fdfdfd;
+    padding: 2rem;
     overflow-y: auto;
 }
 
@@ -61,26 +57,53 @@ body { font-family: sans-serif; background-color: #f4f6f9; height: 100vh; overfl
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-/* Burbujas y Avatares */
-.chat-main { display: flex; align-items: flex-start; gap: 0.75rem; width: 100%; }
+/* --- Gestión de Burbujas y Fotos --- */
+.chat-main { display: flex; align-items: flex-end; gap: 0.75rem; width: 100%; }
 .my-message { justify-content: flex-end; }
 .other-message { justify-content: flex-start; }
 
-.chat-avatar-wrapper { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-.chat-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-
-.chat-box {
-    padding: 0.75rem 1rem;
-    border-radius: 15px;
-    max-width: 300px;
+/* Corrección de la foto: Forzamos tamaño y recorte */
+.chat-avatar-wrapper { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    overflow: hidden; 
+    flex-shrink: 0; 
+    background-color: #eee;
 }
 
-.other-message .chat-box { background: #ffffff; border: 1px solid #e2e8f0; }
-.my-message .chat-box { background: #e4ffd4; border: 1px solid #ccebb5; }
+.chat-avatar-wrapper img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* ESTO EVITA LA DISTORSIÓN */
+    display: block;
+}
 
-/* Input inferior */
-#input-container { padding: 1rem; border-top: 1px solid #e2e8f0; }
-#input-container input { width: 100%; padding: 0.8rem; border-radius: 20px; border: 1px solid #cbd5e1; }
+.chat-box {
+    padding: 0.8rem 1.2rem;
+    border-radius: 18px;
+    max-width: 60%;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.other-message .chat-box { background: #edf2f7; color: #1a202c; border-bottom-left-radius: 4px; }
+.my-message .chat-box { background: #4e67df; color: white; border-bottom-right-radius: 4px; }
+
+.chat-username { font-size: 0.7rem; color: #718096; margin-bottom: 4px; display: block; }
+
+/* --- Input --- */
+#input-container { padding: 1.5rem; border-top: 1px solid #edf2f7; }
+#my_message { 
+    width: 100%; 
+    padding: 1rem; 
+    border-radius: 25px; 
+    border: 2px solid #e2e8f0; 
+    outline: none;
+    transition: border 0.3s;
+}
+#my_message:focus { border-color: #4e67df; }
