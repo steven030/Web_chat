@@ -8,7 +8,7 @@
                     {% for histori in history.items %}
                         <div class="chat-main">
                             <img class="user_images" 
-                                 src="{{ url_for('uploads', filename=histori[2]) }}" 
+                                 src="{{ histori[2] }}" 
                                  alt="Avatar">
 
                             <p class="debug-filename">{{ histori[2] }}</p>
