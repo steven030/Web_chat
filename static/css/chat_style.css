@@ -59,14 +59,26 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; h
     gap: 1.5rem;
 }
 
-/* --- Burbujas de Chat --- */
-.chat-main { display: flex; align-items: flex-end; gap: 0.75rem; width: 100%; }
+/* --- Estructura del Chat (Alineaciones Corregidas) --- */
+.chat-main { 
+    display: flex; 
+    align-items: flex-start; /* Alinea todo desde arriba para evitar saltos */
+    gap: 0.75rem; 
+    width: 100%; 
+}
+
+.chat-content-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 70%;
+}
+
 .my-message { justify-content: flex-end; }
+.my-message .chat-content-body { align-items: flex-end; }
 .other-message { justify-content: flex-start; }
 
-/* --- CORRECCIÓN DE IMÁGENES (AVATARES) --- */
-/* El contenedor envuelve la imagen y fuerza el tamaño 40x40 */
-/* --- REGLA DE FUERZA BRUTA PARA EL AVATAR --- */
+/* --- Avatares (Forzados a 40x40) --- */
 .chat-avatar-wrapper {
     width: 40px !important;
     height: 40px !important;
@@ -75,7 +87,7 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; h
     border-radius: 50% !important;
     overflow: hidden !important;
     flex-shrink: 0 !important;
-    display: block !important;
+    background-color: #e2e8f0;
 }
 
 .chat-avatar-wrapper img {
@@ -85,21 +97,22 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f6f9; h
     display: block !important;
 }
 
-/* Estilo de los globos de texto */
+/* --- Burbujas de Texto --- */
 .chat-box {
     padding: 0.8rem 1.2rem;
     border-radius: 18px;
-    max-width: 60%;
+    word-wrap: break-word;
     font-size: 0.95rem;
     line-height: 1.4;
+    margin-top: 4px;
 }
 
 .other-message .chat-box { background: #edf2f7; color: #1a202c; border-bottom-left-radius: 4px; }
 .my-message .chat-box { background: #4e67df; color: white; border-bottom-right-radius: 4px; }
 
-.chat-username { font-size: 0.7rem; color: #718096; margin-bottom: 4px; display: block; }
+.chat-username { font-size: 0.7rem; color: #718096; display: block; }
 
-/* --- Input Inferior --- */
+/* --- Input --- */
 #input-container { padding: 1.5rem; border-top: 1px solid #edf2f7; }
 #my_message { 
     width: 100%; 
