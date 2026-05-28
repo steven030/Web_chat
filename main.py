@@ -1,12 +1,12 @@
 import os
 from io import BytesIO
-from flask import Flask, request, render_template, url_for, session, redirect, flash
+from flask import Flask, request, render_template, url_for, session, redirect, flash,jsonify
 from flask_socketio import SocketIO, send, join_room, emit
 from werkzeug.utils import secure_filename
 from PIL import Image
 from imagekitio import ImageKit
 
- 
+
 from config import Is_delovepment
 from model import User, db, CommentUser, PrivateMessage 
 import forms
@@ -178,20 +178,45 @@ def on_join_private():
 
 @socketio.on('private_message')
 def handle_private_message(data):
-    # data debe contener: {'receiver_id': 5, 'message': 'Hola!'}
     sender = User.query.filter_by(username=session.get('username')).first()
     receiver_id = data['receiver_id']
     msg_text = data['message']
 
-    # 1. Guardar en BD
     new_msg = PrivateMessage(sender_id=sender.id, receiver_id=receiver_id, text=msg_text)
     db.session.add(new_msg)
     db.session.commit()
 
-    # 2. Enviar solo al usuario destino
-    emit('receive_private_message', 
-         {'sender': sender.username, 'message': msg_text}, 
-         room=f"user_{receiver_id}")
+    # Enviamos al receptor Y TAMBIÉN al emisor para actualizar su propia pantalla
+    payload = {
+        'sender': sender.username, 
+        'message': msg_text,
+        'img': sender.image # <--- IMPORTANTE: incluir la imagen
+    }
+    
+    emit('receive_private_message', payload, room=f"user_{receiver_id}")
+    emit('receive_private_message', payload, room=f"user_{sender.id}") # Así el emisor también ve su mensaje
+
+
+@app.route('/get_history/<int:receiver_id>')
+def get_history(receiver_id):
+    sender = User.query.filter_by(username=session['username']).first()
+    # Recuperamos mensajes ordenados por fecha
+    messages = PrivateMessage.query.filter(
+        ((PrivateMessage.sender_id == sender.id) & (PrivateMessage.receiver_id == receiver_id)) |
+        ((PrivateMessage.sender_id == receiver_id) & (PrivateMessage.receiver_id == sender.id))
+    ).order_by(PrivateMessage.timestamp.asc()).all()
+    
+    # Obtenemos los datos necesarios
+    data = []
+    for m in messages:
+        sender_user = User.query.get(m.sender_id)
+        data.append({
+            'sender': sender_user.username,
+            'text': m.text,
+            'img': sender_user.image,
+            'is_me': (m.sender_id == sender.id)
+        })
+    return jsonify(data)
 
 
 
